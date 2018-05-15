@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -13,9 +14,19 @@ import java.util.TreeSet;
 
 public class ClusteringGenetico {
 	
+	static ArrayList<double[]> itemset = new ArrayList<double[]>();
 	static int dim = 0;
 	static int numTransactions = 0;
-	static ArrayList<double[]> itemset = new ArrayList<double[]>();
+	
+	
+	public static double calculateDistance(double[] array1, double[] array2)
+	{
+        double Sum = 0.0;
+        for(int i=0;i<array1.length;i++) {
+           Sum = Sum + Math.pow((array1[i]-array2[i]),2.0);
+        }
+        return Math.sqrt(Sum);
+	}
 	
 	//data random de prueba
 	static ArrayList<double[]> RandomDataSet(int dimension, int tamEntrada, double High, double Low) {
@@ -102,12 +113,12 @@ public class ClusteringGenetico {
 	    		itemset.add(elto);
 	    	}  
 	    		    	
-	    	double[] arreglo;
+	    	/*double[] arreglo;
 			for (i=0; i<itemset.size(); i++) {
 				
 				arreglo = itemset.get(i);
 				System.out.println(Arrays.toString(arreglo));
-			}								
+			}*/							
 		}
 	
 	public static void main (String[] args) throws Exception{
@@ -142,7 +153,7 @@ public class ClusteringGenetico {
 		System.out.println(ind.fitness(itemset));*/
 		
 		Poblacion population = new Poblacion (itemset, 5, 100, 
-			  	10, 85, 15, clusters, dimension);
+			  	10, 85, 5, clusters, dimension);
 		Individuo mejor = new Individuo(numTransactions);
 		
 		
@@ -151,37 +162,86 @@ public class ClusteringGenetico {
         	System.out.println((population.poblacion[i].fitness));	
         }*/
 		
-		for (i=0; i<1000; i++) {
+		for (i = 0; i<100; i++) {
 		
-			for (j = 0; j < population.poblacion.length; j++) {
-				setearcentroides (dimension, population.poblacion[j], itemset, clusters);
-			}
-			
-						
 			population.calcFitness();
 			
 			if ((population.getBest().fitness > mejor.fitness)){
+				
 				mejor = population.getBest();
 				
 			}
 			
-			//System.out.println(population.getBest().fitness);
-			
+			System.out.println(population.getBest().fitness);
+						
 			population.naturalSelection();
 			
 			population = population.generate();
-		
 			
+			for (j = 10; j < population.poblacion.length; j++) {
+				setearcentroides (dimension, population.poblacion[j], itemset, clusters);
+			}
+			
+							
 		}
+		
+		System.out.println("Fitness:");
 		System.out.println(mejor.fitness);
+		System.out.println(" ");
+		
+		System.out.println("Centroides:");
 		for (i = 0; i < clusters; i++) {
 			double[] cent = new double [dimension];
 			cent = mejor.centroides.get(i);
 			System.out.println(Arrays.toString(cent));
 			
 		}
+		System.out.println(" ");
+		
+		
+		double distancia;
+		double min;
+		for (j = 0; j < tamEntrada; j++) {
+	  		  min = 1000000.00;
+	  		  for (i = 0; i < clusters; i++) {
+			    	  
+			    	  distancia = calculateDistance(mejor.centroides.get(i), itemset.get(j));
+		    		  if (distancia < min) {
+		    			  mejor.genes[j] = i;
+		    			  min = distancia;
+		    		  }
+	  		  }
+	  		  
+	    
+		}
+		
+		System.out.println("Mejor Individuo:");
+		System.out.println(Arrays.toString(mejor.genes));
+		System.out.println(" ");
+		ArrayList<double[]> salida = new ArrayList<double[]>();
+		
+		System.out.println("Puntos asociados:");
+		for (i = 0; i < numTransactions; i++) {
+			
+			double[] aux = new double [dimension+1];
+			for (j = 0; j<dimension; j++) {
+				aux [j] = itemset.get(i)[j];
+			}
+			aux[dimension] = mejor.genes[i];
+			salida.add(aux);
+			
+		}
+		double[] arreglo;
+		for (i=0; i<numTransactions; i++) {
+			
+			arreglo = salida.get(i);
+			System.out.println(Arrays.toString(arreglo));
+		}
+		
+		
+		
 	}
-	
+		
 }
 		
 		

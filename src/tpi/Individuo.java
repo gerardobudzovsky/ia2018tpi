@@ -3,6 +3,15 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Individuo {
+	
+		public static double calculateDistance(double[] array1, double[] array2)
+		{
+	        double Sum = 0.0;
+	        for(int i=0;i<array1.length;i++) {
+	           Sum = Sum + Math.pow((array1[i]-array2[i]),2.0);
+	        }
+	        return Math.sqrt(Sum);
+		}
 		
 		Double AleatorioReal (Double Low, Double High) {
 			
@@ -35,29 +44,51 @@ public class Individuo {
 		}*/
 	
 		// The genetic sequence
-			ArrayList<double[]> centroides;
+			ArrayList<double[]> centroides = new ArrayList <double[]>();
 			int numClusters;
 			int[] genes;
 			double fitness;
 			int dimension;
+			ArrayList<double[]> dataset;
 		  
 		  // Constructor: recibe "n" (cantidad de puntos que nos pasan) y
 		  // "k" (cantidad de clusters)
 			// "d" dimension	
-		Individuo(int n, int k, int d) {
+		Individuo(int n, int k, int d, ArrayList<double[]> itemset) {
 			  
+			  dataset = itemset;
 			  dimension = d;
 			  numClusters = k;
 			  
-			  Random r = new Random(); //Generador random de 1 a clusters k
+			  Random r = new Random(); //Generador random de 1 a punto ni
 			  int Low = 0;
-		      int High = k;
+		      int High = n;
 			  genes = new int[n];
+			  double[] centroide = new double[d];
+			  double min;
+			  double distancia;
+			  int i;
 			  
-		      for (int i = 0; i < genes.length; i++) {
-		      genes[i] = r.nextInt(High-Low) + Low;
+			  for (i = 0; i < numClusters; i++) {
+				  
+				  centroide = dataset.get(r.nextInt(High-Low) + Low);
+				  centroides.add(centroide);
+				  
+			  }
 		      
-		      }
+		    	  for (int j = 0; j < n; j++) {
+		    		  min = 1000000.00;
+		    		  for (i = 0; i < numClusters; i++) {
+				    	  
+				    	  distancia = calculateDistance(centroides.get(i), dataset.get(j));
+			    		  if (distancia < min) {
+			    			  genes[j] = i;
+			    			  min = distancia;
+			    		  }
+		    		  }
+		    		  //genes[i] = r.nextInt(High-Low) + Low;
+		      
+		    	  }
 		  }
 		
 		//Constructor individuo vacío de tamaño n
@@ -119,7 +150,7 @@ public class Individuo {
 		  Individuo Cruzar(Individuo pareja) {
 		    
 			 // Nuevo hijo
-		    Individuo hijito = new Individuo(genes.length, numClusters, dimension);
+		    Individuo hijito = new Individuo(genes.length, numClusters, dimension, dataset);
 		    
 		    int midpoint = AleatorioInt(0, numClusters); //int(random(genes.length)); // Pick a midpoint
 		    
@@ -136,7 +167,7 @@ public class Individuo {
 		  Individuo mutar(double tasaMutacion, double tasaGenes) {
 		    
 			Double porcentual = tasaGenes/100;
-			Individuo xmen = new Individuo (genes.length, numClusters, dimension);
+			Individuo xmen = new Individuo (genes.length, numClusters, dimension, dataset);
 			xmen.genes = genes;
 			double calcGen = genes.length * porcentual;
 			int cantGen = (int)calcGen;

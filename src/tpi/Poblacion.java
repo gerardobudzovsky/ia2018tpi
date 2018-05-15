@@ -92,7 +92,7 @@ public class Poblacion {
 		public static void main(String[] args) throws Exception {
 		
 			Datos();
-			int clusters = 2;
+			int clusters = 3;
 			int dimension = dim;
 			int tamEntrada = numTransactions;
 			double Low = 0.0; //para random
@@ -169,7 +169,7 @@ public class Poblacion {
 	    dimension = d;
 	    
 	    for (int i = 0; i < poblacion.length; i++) {
-	      poblacion[i] = new Individuo(dataset.size(), clusters, dimension);
+	      poblacion[i] = new Individuo(dataset.size(), clusters, dimension, puntos);
 	    }
 	    //calcFitness();
 	    matingPool = new ArrayList<Individuo>();
@@ -241,7 +241,8 @@ public class Poblacion {
 	      for (int i = 0; i < cantsel; i++) {
 	    	
 	    	  //int a = AleatorioInt(0, matingPool.size());
-	    	  poblacionsig.poblacion[i] = poblacion[poblacion.length-cantsel-1];
+	    	  poblacionsig.poblacion[i] = sorter.array[poblacion.length-i-1];
+	    	  //poblacionsig.poblacion[i].centroides = sorter.array[i].centroides;
 	    	  
 	      }
 	      
@@ -260,7 +261,7 @@ public class Poblacion {
 	      for (int i = (cantcru + cantsel); i < poblacion.length; i++) {
 	    	  
 	    	  int a = AleatorioInt(0, matingPool.size());
-	    	  Individuo xmen = matingPool.get(a).mutar(tasaMutacion, 30);
+	    	  Individuo xmen = matingPool.get(a).mutar(tasaMutacion, 50);
 	    	  poblacionsig.poblacion[i] = xmen;
 	      }
 	      
