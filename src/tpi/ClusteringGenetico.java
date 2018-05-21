@@ -17,6 +17,7 @@ public class ClusteringGenetico {
 	static ArrayList<double[]> itemset = new ArrayList<double[]>();
 	static int dim = 0;
 	static int numTransactions = 0;
+	static double MAX = 1.7E300;
 	
 	
 	public static double calculateDistance(double[] array1, double[] array2)
@@ -29,15 +30,15 @@ public class ClusteringGenetico {
 	}
 	
 	//data random de prueba
-	static ArrayList<double[]> RandomDataSet(int dimension, int tamEntrada, double High, double Low) {
+	static ArrayList<double[]> RandomDataSet(int dim, int tamEntrada, double High, double Low) {
 		
 		ArrayList<double[]> dataset = new ArrayList<double[]>();
 		int j;
 		int i;
 		
 		for (j=0; j<tamEntrada; j++) {
-			double[] arreglo = new double [dimension];//debo crear un objeto para cada posición de la lista
-			for (i=0; i<dimension; i++) {
+			double[] arreglo = new double [dim];//debo crear un objeto para cada posición de la lista
+			for (i=0; i<dim; i++) {
 				
 				arreglo [i] =  (Math.random() * ((High - Low) + 1)) + Low;
 						
@@ -51,7 +52,7 @@ public class ClusteringGenetico {
 	//setear centroides del individuo
 	static void setearcentroides (int dimension, Individuo ind, ArrayList<double[]> dataset, int clusters) {
 		int i;
-		//TreeSet<double[]> tree = new TreeSet <double[]>();//Mejor estrucutura segun Blas(?
+		//TreeSet<double[]> tree = new TreeSet <double[]>();
 		ArrayList<double[]> listacentroides = new ArrayList<double[]>();
 			for (i=0; i<clusters; i++) {
 				double[] centroide = new double[dimension];
@@ -79,7 +80,7 @@ public class ClusteringGenetico {
 			
 			int i=0;
 			
-			transaFile = "D:/dataset01.txt";
+			transaFile = "D:/laWazada2.txt";
 			
 			BufferedReader data = new BufferedReader(new FileReader(transaFile));
 		    	    		
@@ -103,7 +104,7 @@ public class ClusteringGenetico {
 	    		if (line.matches("\\s*")) continue; // saltar lineas vacias
 	    		numTransactions++;
 	    		StringTokenizer t = new StringTokenizer(line,"\t");
-	    		double[] elto = new double[2];
+	    		double[] elto = new double[dim];
 	    		i = 0;
 	    		while (t.hasMoreTokens()) {
 	    			elto[i] = Double.parseDouble(t.nextToken());
@@ -120,125 +121,196 @@ public class ClusteringGenetico {
 				System.out.println(Arrays.toString(arreglo));
 			}*/							
 		}
+		
+		static Individuo pasoFinal (Individuo mejor, int clusters) {
+			double distancia;
+			double min;
+			for (int j = 0; j < numTransactions; j++) {
+		  		  min = MAX;
+		  		  for (int i = 0; i < clusters; i++) {
+				    	  
+				    	  distancia = calculateDistance(mejor.centroides.get(i), itemset.get(j));
+			    		  if (distancia < min) {
+			    			  mejor.genes[j] = i;
+			    			  min = distancia;
+			    		  }
+		  		  }
+		  	 
+		    }
+			return mejor;
+		}
+		
+		static double[] calcMedia() {
+			
+			double[] media = new double[dim];
+			for (int i = 0; i < dim; i++) {
+				double acum = 0;
+				for (int j = 0; j < numTransactions; j++) {
+					acum = acum + itemset.get(j)[i];
+				}
+				media[i] = acum;
+			}
+			/*for (int i = 0; i < dim; i++) {
+				media[i] = acum/(dim*numTransactions);
+			}*/
+			return media;
+		}
+		
+		static double SSB (Individuo mejor, int clusters, double[] media) {
+			double distance;
+			double interClust = 0;
+			for (int i = 0; i < clusters; i++) {
+				int cont = 0;
+				for (int j = 0; j < numTransactions; j++) {
+					if (mejor.genes[j] == i) {
+						cont++;
+					}
+					//calcula distancia del centroide y la media del dataset al cuadrado
+					distance = Math.pow(calculateDistance(mejor.centroides.get(i), media),2.0);
+					interClust = interClust + (cont*distance);
+				}
+			}
+			return interClust;
+		}
 	
 	public static void main (String[] args) throws Exception{
 		
 		Datos();
-		int clusters = 3;
-		int dimension = dim;
-		int tamEntrada = numTransactions;
-		double Low = 0.0; //para random
-	    double High = 100.0; //para random
-		int i;
-		int j;
-		double[] linea;
+		int clusters = 5;//cantidad de clusters
+		int cantidadIndividuos = 100;
+		int seleccionar = 10;//porcentaje de selección
+		int cruzar = 80;//Porcentaje de cruza
+		int mutar = 10;//Porcentaje de mutación
+		int generaciones = 100;
 		
-		/*
-		//creo individuos de "tamEntrada" posiciones, clusters y dimension
-		Individuo ind = new Individuo(tamEntrada, clusters, dimension);
+		//Se genera la población inicial con centroides al azar del dataset
+		Poblacion population = new Poblacion (itemset, cantidadIndividuos, 
+			  	seleccionar, cruzar, mutar, clusters, dim);
 		
-		//Dataset de prueba
-		ArrayList<double[]> dataset = new ArrayList<double[]>();
+		//Se calcula el fitness de toda la pobalción
+		population.calcFitness(0);
 		
-		System.out.println(" ");
-		System.out.println(Arrays.toString(ind.getPhrase()));//Imprimo el individuo
-		System.out.println(" ");
+		//Se crea el individuo donde se elojará el mejor de la población
+		Individuo mejor = new Individuo(numTransactions, clusters, dim);
 		
-		//dataset = RandomDataSet(dimension, tamEntrada, High, Low);//Genero un dataset random de prueba
-				
-		System.out.println(" ");
-		setearcentroides (dimension, ind, itemset, clusters);
-		
-		System.out.println(" ");
-		System.out.println(ind.fitness(itemset));*/
-		
-		Poblacion population = new Poblacion (itemset, 5, 100, 
-			  	10, 85, 5, clusters, dimension);
-		Individuo mejor = new Individuo(numTransactions);
-		
+		//Auxiliar para dejar inalterados los seleccionados
+		int selec = (int)(cantidadIndividuos*seleccionar/100);
+		if (seleccionar == 100) {
+			selec = cantidadIndividuos-1;
+		}
 		
 		/* for (i = 0; i < population.poblacion.length; i++) {
         	
         	System.out.println((population.poblacion[i].fitness));	
         }*/
 		
-		for (i = 0; i<100; i++) {
 		
-			population.calcFitness();
+		//Inicia el AG
+		for (int i = 0; i<generaciones; i++) {
+						
+			Individuo mejorFitness = population.getBest();
 			
-			if ((population.getBest().fitness > mejor.fitness)){
+			//Guarda el individuo con mejor fitness
+			if (( mejorFitness.fitness > mejor.fitness)){
 				
-				mejor = population.getBest();
+				System.out.println(i);
+				mejor = mejorFitness;
+				System.out.println(mejor.fitness);
 				
 			}
 			
-			System.out.println(population.getBest().fitness);
-						
+			//System.out.println(mejorFitness.fitness);
+			//System.out.println(i);			
+			
+			//Crea la ruleta para la selección
 			population.naturalSelection();
 			
+			//Genera los individuos para la seguiente generación
+			//con un porcentaje de selección, cruza y mutación
 			population = population.generate();
 			
-			for (j = 10; j < population.poblacion.length; j++) {
-				setearcentroides (dimension, population.poblacion[j], itemset, clusters);
+			//Carga los centroides en los individuos nuevos mutados y cruzados
+			for (int j = selec; j < population.poblacion.length; j++) {
+				setearcentroides (dim, population.poblacion[j], itemset, clusters);
 			}
 			
-							
+			population.calcFitness(selec);				
 		}
 		
+		System.out.println(" ");
 		System.out.println("Fitness:");
 		System.out.println(mejor.fitness);
 		System.out.println(" ");
 		
 		System.out.println("Centroides:");
-		for (i = 0; i < clusters; i++) {
-			double[] cent = new double [dimension];
+		for (int i = 0; i < clusters; i++) {
+			double[] cent = new double [dim];
 			cent = mejor.centroides.get(i);
 			System.out.println(Arrays.toString(cent));
 			
 		}
 		System.out.println(" ");
 		
+		//Reacomoda puntos lejanos al mejor centroide
+		mejor = pasoFinal (mejor, clusters);
+					
+		//Calcula la media del dataset
+		double [] media;
+		media = calcMedia();
 		
-		double distancia;
-		double min;
-		for (j = 0; j < tamEntrada; j++) {
-	  		  min = 1000000.00;
-	  		  for (i = 0; i < clusters; i++) {
-			    	  
-			    	  distancia = calculateDistance(mejor.centroides.get(i), itemset.get(j));
-		    		  if (distancia < min) {
-		    			  mejor.genes[j] = i;
-		    			  min = distancia;
-		    		  }
-	  		  }
-	  		  
-	    
-		}
+		//Calcula la distancia intercluster: Sum of Squared Between
+		double interClust;
+		interClust = SSB (mejor, clusters, media);
 		
+		//Calcula la distancia intracluster: Sum of Squared Within
+		double intraClust;
+		intraClust = mejor.SSW (mejor, clusters, itemset);
+			
+		//System.out.println("Distancia intercluster");
+		//System.out.println(interClust);
+		
+		//Calcula el índice Calinski y Harabasz
+		double calinski;
+		double numerador = interClust/(clusters-1);
+		double denominador1 = intraClust/(numTransactions-clusters);
+		calinski = numerador/denominador1;
+		System.out.println(" ");
+		System.out.println("Calinski y Harabasz");
+		System.out.println(calinski);
+		
+		System.out.println(" ");
+		System.out.println("Xu");
+		double denominador = dim*Math.pow(numTransactions, 2.0);
+		double division = intraClust/denominador;
+		double Xu = dim * Math.log(Math.pow(division, 0.5)) + Math.log(clusters);
+		System.out.println(Xu);
+		
+		System.out.println(" ");
 		System.out.println("Mejor Individuo:");
 		System.out.println(Arrays.toString(mejor.genes));
-		System.out.println(" ");
-		ArrayList<double[]> salida = new ArrayList<double[]>();
 		
+		/*
+		//Imprime los puntos con sus clusters asociados
+		ArrayList<double[]> salida = new ArrayList<double[]>();
+		System.out.println(" ");
 		System.out.println("Puntos asociados:");
-		for (i = 0; i < numTransactions; i++) {
+		for (int i = 0; i < numTransactions; i++) {
 			
-			double[] aux = new double [dimension+1];
-			for (j = 0; j<dimension; j++) {
+			double[] aux = new double [dim+1];
+			for (int j = 0; j<dim; j++) {
 				aux [j] = itemset.get(i)[j];
 			}
-			aux[dimension] = mejor.genes[i];
+			aux[dim] = mejor.genes[i];
 			salida.add(aux);
 			
 		}
 		double[] arreglo;
-		for (i=0; i<numTransactions; i++) {
+		for (int i=0; i<numTransactions; i++) {
 			
 			arreglo = salida.get(i);
 			System.out.println(Arrays.toString(arreglo));
-		}
-		
-		
+		}*/
+		 
 		
 	}
 		

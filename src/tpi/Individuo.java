@@ -3,7 +3,10 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Individuo {
-	
+		
+		static double MAX = 1.7E300;//Máximo double
+		
+		//Calcula la distancia entre dos vectores de "n" dimensiones
 		public static double calculateDistance(double[] array1, double[] array2)
 		{
 	        double Sum = 0.0;
@@ -13,13 +16,14 @@ public class Individuo {
 	        return Math.sqrt(Sum);
 		}
 		
+		//Genera un número aleatorio real entre Low y High
 		Double AleatorioReal (Double Low, Double High) {
 			
 			Double resultado = (Math.random() * ((High - Low) + 1)) + Low;
 			return resultado;
 		}
 
-	
+		//Genera un número entero real entre low y high
 		int AleatorioInt (int Low, int High) {
 			
 			Random r = new Random();
@@ -27,33 +31,24 @@ public class Individuo {
 			return resultado;
 		}
 	
+		//Calcula el error cuadrático entre 2 valores
 		public static double ErrorCuadratico(double val1, double val2) {
 			
 			double error;
-			
 			error = Math.pow(val1 - val2, 2.0);
-			
 			return error;
 			
 		}
 	
-		/*public static void main(String[] args) {
-			Individuo ind = new Individuo(20, 5);
-			
-			System.out.println(Arrays.toString(ind.getPhrase()));
-		}*/
-	
-		// The genetic sequence
-			ArrayList<double[]> centroides = new ArrayList <double[]>();
-			int numClusters;
-			int[] genes;
-			double fitness;
-			int dimension;
-			ArrayList<double[]> dataset;
+		double constanteFitness = 100000;//Multiplicador para evitar que el fitness sea muy chico
+		ArrayList<double[]> centroides = new ArrayList <double[]>();
+		int numClusters;
+		int[] genes;//Vector con "n" posiciones (puntos) con su correspondiente cluster
+		double fitness;
+		int dimension;
+		ArrayList<double[]> dataset;
 		  
-		  // Constructor: recibe "n" (cantidad de puntos que nos pasan) y
-		  // "k" (cantidad de clusters)
-			// "d" dimension	
+		// Constructor que llena genes con random
 		Individuo(int n, int k, int d, ArrayList<double[]> itemset) {
 			  
 			  dataset = itemset;
@@ -77,7 +72,7 @@ public class Individuo {
 			  }
 		      
 		    	  for (int j = 0; j < n; j++) {
-		    		  min = 1000000.00;
+		    		  min = MAX;
 		    		  for (i = 0; i < numClusters; i++) {
 				    	  
 				    	  distancia = calculateDistance(centroides.get(i), dataset.get(j));
@@ -92,9 +87,11 @@ public class Individuo {
 		  }
 		
 		//Constructor individuo vacío de tamaño n
-		Individuo(int n){
+		Individuo(int n, int k, int d){
 			
-			genes = new int[n];		
+			genes = new int[n];
+			dimension = d;
+			numClusters = k;
 					
 		}
 		  
@@ -116,8 +113,26 @@ public class Individuo {
 		  ArrayList<double[]> getCentroides(){
 			  return centroides;
 		  }
-		 
-		  //Fitness function
+		  
+		  //Sum of Squared Within
+		  double SSW (Individuo mejor, int clusters, ArrayList<double[]> punto) {
+				double distance;
+				double intraClust = 0;
+				for (int i = 0; i < clusters; i++) {
+					double acum = 0;
+					for (int j = 0; j < genes.length; j++) {
+						if (mejor.genes[j] == i) {
+							distance = Math.pow(calculateDistance(mejor.centroides.get(i), punto.get(j)),2.0);
+							acum = acum + distance;
+						}
+										
+						intraClust = intraClust + acum;
+					}
+				}
+				return intraClust;
+			}
+		  
+		  //Función fitness
 		  double fitness (ArrayList<double[]> dataset) {
 			 
 			 int j;
@@ -141,20 +156,21 @@ public class Individuo {
 		    		}
 		        }
 		     }
+		     
+		     //Se invierte el valor para que el mayor fitness sea el mejor
+		     fitness = (1/sumatoria)*constanteFitness;
+		     return (1/sumatoria)*constanteFitness;
+		  }
 		  
-		     fitness = (1/sumatoria)*100000;
-		     return (1/sumatoria)*100000;
-		  }    
-		  
-		  //Cruzar
+		  //Cruza simple
 		  Individuo Cruzar(Individuo pareja) {
 		    
 			 // Nuevo hijo
 		    Individuo hijito = new Individuo(genes.length, numClusters, dimension, dataset);
 		    
-		    int midpoint = AleatorioInt(0, numClusters); //int(random(genes.length)); // Pick a midpoint
+		    int midpoint = AleatorioInt(0, numClusters); //Punto medio al azar
 		    
-		    // Half from one, half from the other
+		    //La mitad de uno y la mitad de otro padre
 		    for (int i = 0; i < genes.length; i++) {
 		      if (i > midpoint) hijito.genes[i] = genes[i];
 		      else              hijito.genes[i] = pareja.genes[i];
@@ -163,7 +179,7 @@ public class Individuo {
 		  }
 		  
 		  
-		  // tasaGenes es el porcentaje de genes a mutar
+		  //TasaGenes es el porcentaje de genes a mutar
 		  Individuo mutar(double tasaMutacion, double tasaGenes) {
 		    
 			Double porcentual = tasaGenes/100;
