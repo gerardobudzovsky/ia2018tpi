@@ -19,6 +19,41 @@ public class ClusteringGenetico {
 	static int numTransactions = 0;
 	static double MAX = 1.7E300;
 	
+	public static void PrepararGrafico (Individuo ind, int clusters) {
+		
+		int[] cluster = new int[clusters];	
+		int[] ctidadPuntos = new int[clusters];
+		
+		for (int i = 0; i < clusters; i++) {
+			for (int j = 0; j < numTransactions; j++) {
+				if (ind.genes[j] == i) {
+					ctidadPuntos[i] = ctidadPuntos[i] + 1;
+				}
+			}
+		}
+		System.out.println(Arrays.toString(ctidadPuntos));
+				
+		for (int i = 0; i < clusters; i++) {//Cluster n°
+			//Lista de componentes de puntos del cluster i
+			ArrayList<double[]> componentes = new ArrayList <double[]>();
+			for (int k = 0; k < dim; k++) {//nimension n°
+			
+				double[] comp = new double[ctidadPuntos[i]];
+				int index = 0;
+				for (int j = 0; j < numTransactions; j++) {
+					
+					if (ind.genes[j] == i) {
+						comp[index] = itemset.get(j)[k];
+						index++;
+					}
+				}
+			System.out.println(Arrays.toString(comp));
+			componentes.add(comp);//arreglo de componentes de puntos del cluster i
+			}
+		//Acá debería llamar al graficador para el primer cluster
+		}
+	}
+	
 	
 	public static double calculateDistance(double[] array1, double[] array2)
 	{
@@ -80,7 +115,7 @@ public class ClusteringGenetico {
 			
 			int i=0;
 			
-			transaFile = "D:/laWazada2.txt";
+			transaFile = "D:/dataset01.txt";
 			
 			BufferedReader data = new BufferedReader(new FileReader(transaFile));
 		    	    		
@@ -176,7 +211,7 @@ public class ClusteringGenetico {
 	public static void main (String[] args) throws Exception{
 		
 		Datos();
-		int clusters = 5;//cantidad de clusters
+		int clusters = 3;//cantidad de clusters
 		int cantidadIndividuos = 100;
 		int seleccionar = 10;//porcentaje de selección
 		int cruzar = 80;//Porcentaje de cruza
@@ -289,6 +324,8 @@ public class ClusteringGenetico {
 		System.out.println("Mejor Individuo:");
 		System.out.println(Arrays.toString(mejor.genes));
 		
+		PrepararGrafico (mejor, clusters);
+				
 		/*
 		//Imprime los puntos con sus clusters asociados
 		ArrayList<double[]> salida = new ArrayList<double[]>();
