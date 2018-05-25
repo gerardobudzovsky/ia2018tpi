@@ -11,6 +11,9 @@ import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
 
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
+
 
 public class ClusteringGenetico {
 	
@@ -19,9 +22,31 @@ public class ClusteringGenetico {
 	static int numTransactions = 0;
 	static double MAX = 1.7E300;
 	
-	public static void PrepararGrafico (Individuo ind, int clusters) {
+	//Imprime los puntos con sus clusters asociados
+	static void ArmarTabla(Individuo mejor){
+		ArrayList<double[]> salida = new ArrayList<double[]>();
+		System.out.println(" ");
+		System.out.println("Puntos asociados:");
+		for (int i = 0; i < numTransactions; i++) {
+			
+			double[] aux = new double [dim+1];
+			for (int j = 0; j<dim; j++) {
+				aux [j] = itemset.get(i)[j];
+			}
+			aux[dim] = mejor.genes[i];
+			salida.add(aux);
+			
+		}
+		double[] arreglo;
+		for (int i=0; i<numTransactions; i++) {
+			
+			arreglo = salida.get(i);
+			System.out.println(Arrays.toString(arreglo));
+		}
+	}
+	
+	public static void PrepararGrafico (Individuo ind, int clusters, int dimension1, int dimension2) {
 		
-		int[] cluster = new int[clusters];	
 		int[] ctidadPuntos = new int[clusters];
 		
 		for (int i = 0; i < clusters; i++) {
@@ -32,7 +57,9 @@ public class ClusteringGenetico {
 			}
 		}
 		System.out.println(Arrays.toString(ctidadPuntos));
-				
+		
+		Cluster[] grafico = new Cluster[clusters];
+		
 		for (int i = 0; i < clusters; i++) {//Cluster n°
 			//Lista de componentes de puntos del cluster i
 			ArrayList<double[]> componentes = new ArrayList <double[]>();
@@ -50,8 +77,17 @@ public class ClusteringGenetico {
 			System.out.println(Arrays.toString(comp));
 			componentes.add(comp);//arreglo de componentes de puntos del cluster i
 			}
-		//Acá debería llamar al graficador para el primer cluster
+			Cluster clusteraux = new Cluster(dim, i, componentes);
+			grafico[i] = clusteraux;//Arreglo de componentes de cada cluster
+			
 		}
+		SwingUtilities.invokeLater(() -> {
+		      ScatterPlotExample example = new ScatterPlotExample("Gráfico", grafico, clusters, dimension1, dimension2);
+		      example.setSize(800, 400);
+		      example.setLocationRelativeTo(null);
+		      example.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		      example.setVisible(true);
+		    });
 	}
 	
 	
@@ -61,7 +97,7 @@ public class ClusteringGenetico {
         for(int i=0;i<array1.length;i++) {
            Sum = Sum + Math.pow((array1[i]-array2[i]),2.0);
         }
-        return Math.sqrt(Sum);
+        return Math.pow(Sum, 0.5);
 	}
 	
 	//data random de prueba
@@ -115,7 +151,7 @@ public class ClusteringGenetico {
 			
 			int i=0;
 			
-			transaFile = "D:/dataset01.txt";
+			transaFile = "D:/laWazada2.txt";
 			
 			BufferedReader data = new BufferedReader(new FileReader(transaFile));
 		    	    		
@@ -210,145 +246,349 @@ public class ClusteringGenetico {
 	
 	public static void main (String[] args) throws Exception{
 		
+		int menu = 2;//1 - común, 2-rango, 3-comparación
 		Datos();
-		int clusters = 3;//cantidad de clusters
-		int cantidadIndividuos = 100;
-		int seleccionar = 10;//porcentaje de selección
-		int cruzar = 80;//Porcentaje de cruza
-		int mutar = 10;//Porcentaje de mutación
-		int generaciones = 100;
 		
-		//Se genera la población inicial con centroides al azar del dataset
-		Poblacion population = new Poblacion (itemset, cantidadIndividuos, 
-			  	seleccionar, cruzar, mutar, clusters, dim);
+		switch (menu) {
 		
-		//Se calcula el fitness de toda la pobalción
-		population.calcFitness(0);
-		
-		//Se crea el individuo donde se elojará el mejor de la población
-		Individuo mejor = new Individuo(numTransactions, clusters, dim);
-		
-		//Auxiliar para dejar inalterados los seleccionados
-		int selec = (int)(cantidadIndividuos*seleccionar/100);
-		if (seleccionar == 100) {
-			selec = cantidadIndividuos-1;
-		}
-		
-		/* for (i = 0; i < population.poblacion.length; i++) {
-        	
-        	System.out.println((population.poblacion[i].fitness));	
-        }*/
-		
-		
-		//Inicia el AG
-		for (int i = 0; i<generaciones; i++) {
-						
-			Individuo mejorFitness = population.getBest();
-			
-			//Guarda el individuo con mejor fitness
-			if (( mejorFitness.fitness > mejor.fitness)){
+			case 1://común
+			{	
+				int clusterInicial = 5;//cantidad de clusters
+				int cantidadIndividuos = 100;
+				int seleccionar = 10;//porcentaje de selección
+				int cruzar = 60;//Porcentaje de cruza
+				int mutar = 30;//Porcentaje de mutación
+				int generaciones = 100;
+				int clusterFinal = clusterInicial;
+				int diferencia = clusterFinal - clusterInicial;
+				Boolean BanderaCancelar = false; // bandera para cancelar
+				int z = 0; //indice del rango
+				int m = 0; //indice de la poblacion de mejores
+				double mejorCalinski = 0; //Para determinar la mejor clasificación de clusters
+				int mejorIndex = 0;
 				
-				System.out.println(i);
-				mejor = mejorFitness;
-				System.out.println(mejor.fitness);
+				//Crear población donde se gurdan los mejores de cada número de clusters
+				Poblacion mejores = new Poblacion(itemset, 0, diferencia+1, 
+					  		seleccionar, cruzar, mutar, 0, dim);
 				
-			}
-			
-			//System.out.println(mejorFitness.fitness);
-			//System.out.println(i);			
-			
-			//Crea la ruleta para la selección
-			population.naturalSelection();
-			
-			//Genera los individuos para la seguiente generación
-			//con un porcentaje de selección, cruza y mutación
-			population = population.generate();
-			
-			//Carga los centroides en los individuos nuevos mutados y cruzados
-			for (int j = selec; j < population.poblacion.length; j++) {
-				setearcentroides (dim, population.poblacion[j], itemset, clusters);
-			}
-			
-			population.calcFitness(selec);				
-		}
-		
-		System.out.println(" ");
-		System.out.println("Fitness:");
-		System.out.println(mejor.fitness);
-		System.out.println(" ");
-		
-		System.out.println("Centroides:");
-		for (int i = 0; i < clusters; i++) {
-			double[] cent = new double [dim];
-			cent = mejor.centroides.get(i);
-			System.out.println(Arrays.toString(cent));
-			
-		}
-		System.out.println(" ");
-		
-		//Reacomoda puntos lejanos al mejor centroide
-		mejor = pasoFinal (mejor, clusters);
+				while ((z < (diferencia+1)) && (BanderaCancelar == false)) {
 					
-		//Calcula la media del dataset
-		double [] media;
-		media = calcMedia();
-		
-		//Calcula la distancia intercluster: Sum of Squared Between
-		double interClust;
-		interClust = SSB (mejor, clusters, media);
-		
-		//Calcula la distancia intracluster: Sum of Squared Within
-		double intraClust;
-		intraClust = mejor.SSW (mejor, clusters, itemset);
-			
-		//System.out.println("Distancia intercluster");
-		//System.out.println(interClust);
-		
-		//Calcula el índice Calinski y Harabasz
-		double calinski;
-		double numerador = interClust/(clusters-1);
-		double denominador1 = intraClust/(numTransactions-clusters);
-		calinski = numerador/denominador1;
-		System.out.println(" ");
-		System.out.println("Calinski y Harabasz");
-		System.out.println(calinski);
-		
-		System.out.println(" ");
-		System.out.println("Xu");
-		double denominador = dim*Math.pow(numTransactions, 2.0);
-		double division = intraClust/denominador;
-		double Xu = dim * Math.log(Math.pow(division, 0.5)) + Math.log(clusters);
-		System.out.println(Xu);
-		
-		System.out.println(" ");
-		System.out.println("Mejor Individuo:");
-		System.out.println(Arrays.toString(mejor.genes));
-		
-		PrepararGrafico (mejor, clusters);
+					int clusters = clusterInicial + z;
 				
-		/*
-		//Imprime los puntos con sus clusters asociados
-		ArrayList<double[]> salida = new ArrayList<double[]>();
-		System.out.println(" ");
-		System.out.println("Puntos asociados:");
-		for (int i = 0; i < numTransactions; i++) {
+					//Se genera la población inicial con centroides al azar del dataset
+					Poblacion population = new Poblacion (itemset, cantidadIndividuos, 
+						  	seleccionar, cruzar, mutar, clusters, dim);
+					
+					//Se calcula el fitness de toda la pobalción
+					population.calcFitness(0);
+					
+					//Se crea el individuo donde se elojará el mejor de la población
+					Individuo mejor = new Individuo(numTransactions, clusters, dim);
+					
+					//Auxiliar para dejar inalterados los seleccionados
+					int selec = (int)(cantidadIndividuos*seleccionar/100);
+					if (seleccionar == 100) {
+						selec = cantidadIndividuos-1;
+					}
+					
+					/* for (i = 0; i < population.poblacion.length; i++) {
+			        	
+			        	System.out.println((population.poblacion[i].fitness));	
+			        }*/
+					
+					
+					//Inicia el AG
+					for (int i = 0; i<generaciones; i++) {
+									
+						Individuo mejorFitness = population.getBest();
+						
+						//Guarda el individuo con mejor fitness
+						if (( mejorFitness.fitness > mejor.fitness)){
+							
+							System.out.println(i);
+							mejor = mejorFitness;
+							System.out.println(mejor.fitness);
+							
+						}
+						
+						//System.out.println(mejorFitness.fitness);
+						//System.out.println(i);			
+						
+						//Crea la ruleta para la selección
+						population.naturalSelection();
+						
+						//Genera los individuos para la seguiente generación
+						//con un porcentaje de selección, cruza y mutación
+						population = population.generate();
+						
+						//Carga los centroides en los individuos nuevos mutados y cruzados
+						for (int j = selec; j < population.poblacion.length; j++) {
+							setearcentroides (dim, population.poblacion[j], itemset, clusters);
+						}
+						
+						population.calcFitness(selec);				
+					}
+					//Reacomoda puntos lejanos al mejor centroide
+					mejor = pasoFinal (mejor, clusters);
+					
+					//Calcula la media del dataset
+					double [] media;
+					media = calcMedia();
+					
+					//Calcula la distancia intercluster: Sum of Squared Between
+					double interClust;
+					interClust = SSB (mejor, clusters, media);
+					
+					//Calcula la distancia intracluster: Sum of Squared Within
+					double intraClust;
+					intraClust = mejor.SSW (mejor, clusters, itemset);
+						
+					//System.out.println("Distancia intercluster");
+					//System.out.println(interClust);
+					
+					//Calcula el índice Calinski y Harabasz
+					double calinski;
+					double numerador = interClust/(clusters-1);
+					double denominador1 = intraClust/(numTransactions-clusters);
+					calinski = numerador/denominador1;
+					System.out.println(" ");
+					System.out.println("Calinski y Harabasz");
+					System.out.println(calinski);
+					
+					mejor.calinski = calinski;//setear el valor del ínidice en el individuo
+					
+					//Agrega individuo a la población de mejores
+					mejores.poblacion[m] = mejor;
+					//Determina el mejor de todos
+					if (mejor.calinski > mejorCalinski) {
+						mejorIndex = m;
+						mejorCalinski = mejor.calinski;
+					}
+					//Aumenta el ínidice de la población de mejores
+					m = m + 1;
+					
+					
+					
+					System.out.println(" ");
+					System.out.println("Fitness:");
+					System.out.println(mejor.fitness);
+					System.out.println(" ");
+					
+					System.out.println("Centroides:");
+					for (int i = 0; i < clusters; i++) {
+						double[] cent = new double [dim];
+						cent = mejor.centroides.get(i);
+						System.out.println(Arrays.toString(cent));
+						
+					}
+					System.out.println(" ");
+											
+					
+					
+					/*System.out.println(" ");
+					System.out.println("Xu");
+					double denominador = dim*Math.pow(numTransactions, 2.0);
+					double division = intraClust/denominador;
+					double Xu = dim * Math.log(Math.pow(division, 0.5)) + Math.log(clusters);
+					System.out.println(Xu);
+					
+					System.out.println(" ");
+					System.out.println("Mejor Individuo:");
+					System.out.println(Arrays.toString(mejor.genes));*/
+					
+					//PrepararGrafico (mejor, mejor.numClusters);
+					
+					z = z +1;
+					
+					//Tabla de puntos con sus cluster asociado
+					ArmarTabla(mejor);
+					
+					//BanderaCancelar = true; // Condición para cancelar ejecución
+					
+				}
+				
+				int dimension1 = 0;
+				int dimension2 = 1;
+				
+				PrepararGrafico (mejores.poblacion[mejorIndex], 
+							mejores.poblacion[mejorIndex].numClusters, dimension1, dimension2);
+				}
+				break;
 			
-			double[] aux = new double [dim+1];
-			for (int j = 0; j<dim; j++) {
-				aux [j] = itemset.get(i)[j];
+			case 2://rango
+			{	
+				int clusterInicial = 2;//cantidad de clusters
+				int cantidadIndividuos = 100;
+				int seleccionar = 10;//porcentaje de selección
+				int cruzar = 60;//Porcentaje de cruza
+				int mutar = 30;//Porcentaje de mutación
+				int generaciones = 100;
+				int clusterFinal = 7;
+				int diferencia = clusterFinal - clusterInicial;
+				Boolean BanderaCancelar = false; // bandera para cancelar
+				int z = 0; //indice del rango
+				int m = 0; //indice de la poblacion de mejores
+				double mejorCalinski = 0; //Para determinar la mejor clasificación de clusters
+				int mejorIndex = 0;
+				
+				//Crear población donde se gurdan los mejores de cada número de clusters
+				Poblacion mejores = new Poblacion(itemset, 0, diferencia+1, 
+					  		seleccionar, cruzar, mutar, 0, dim);
+				
+				while ((z < (diferencia+1)) && (BanderaCancelar == false)) {
+					
+					int clusters = clusterInicial + z;
+				
+					//Se genera la población inicial con centroides al azar del dataset
+					Poblacion population = new Poblacion (itemset, cantidadIndividuos, 
+						  	seleccionar, cruzar, mutar, clusters, dim);
+					
+					//Se calcula el fitness de toda la pobalción
+					population.calcFitness(0);
+					
+					//Se crea el individuo donde se elojará el mejor de la población
+					Individuo mejor = new Individuo(numTransactions, clusters, dim);
+					
+					//Auxiliar para dejar inalterados los seleccionados
+					int selec = (int)(cantidadIndividuos*seleccionar/100);
+					if (seleccionar == 100) {
+						selec = cantidadIndividuos-1;
+					}
+					
+					/* for (i = 0; i < population.poblacion.length; i++) {
+			        	
+			        	System.out.println((population.poblacion[i].fitness));	
+			        }*/
+					
+					
+					//Inicia el AG
+					for (int i = 0; i<generaciones; i++) {
+									
+						Individuo mejorFitness = population.getBest();
+						
+						//Guarda el individuo con mejor fitness
+						if (( mejorFitness.fitness > mejor.fitness)){
+							
+							System.out.println(i);
+							mejor = mejorFitness;
+							System.out.println(mejor.fitness);
+							
+						}
+						
+						//System.out.println(mejorFitness.fitness);
+						//System.out.println(i);			
+						
+						//Crea la ruleta para la selección
+						population.naturalSelection();
+						
+						//Genera los individuos para la seguiente generación
+						//con un porcentaje de selección, cruza y mutación
+						population = population.generate();
+						
+						//Carga los centroides en los individuos nuevos mutados y cruzados
+						for (int j = selec; j < population.poblacion.length; j++) {
+							setearcentroides (dim, population.poblacion[j], itemset, clusters);
+						}
+						
+						population.calcFitness(selec);				
+					}
+					//Reacomoda puntos lejanos al mejor centroide
+					mejor = pasoFinal (mejor, clusters);
+					
+					//Calcula la media del dataset
+					double [] media;
+					media = calcMedia();
+					
+					//Calcula la distancia intercluster: Sum of Squared Between
+					double interClust;
+					interClust = SSB (mejor, clusters, media);
+					
+					//Calcula la distancia intracluster: Sum of Squared Within
+					double intraClust;
+					intraClust = mejor.SSW (mejor, clusters, itemset);
+						
+					//System.out.println("Distancia intercluster");
+					//System.out.println(interClust);
+					
+					//Calcula el índice Calinski y Harabasz
+					double calinski;
+					double numerador = interClust/(clusters-1);
+					double denominador1 = intraClust/(numTransactions-clusters);
+					calinski = numerador/denominador1;
+					System.out.println(" ");
+					System.out.println("Calinski y Harabasz");
+					System.out.println(calinski);
+					
+					mejor.calinski = calinski;//setear el valor del ínidice en el individuo
+					
+					//Agrega individuo a la población de mejores
+					mejores.poblacion[m] = mejor;
+					//Determina el mejor de todos
+					if (mejor.calinski > mejorCalinski) {
+						mejorIndex = m;
+						mejorCalinski = mejor.calinski;
+					}
+					//Aumenta el ínidice de la población de mejores
+					m = m + 1;
+					
+					
+					
+					System.out.println(" ");
+					System.out.println("Fitness:");
+					System.out.println(mejor.fitness);
+					System.out.println(" ");
+					
+					System.out.println("Centroides:");
+					for (int i = 0; i < clusters; i++) {
+						double[] cent = new double [dim];
+						cent = mejor.centroides.get(i);
+						System.out.println(Arrays.toString(cent));
+						
+					}
+					System.out.println(" ");
+											
+					
+					
+					/*System.out.println(" ");
+					System.out.println("Xu");
+					double denominador = dim*Math.pow(numTransactions, 2.0);
+					double division = intraClust/denominador;
+					double Xu = dim * Math.log(Math.pow(division, 0.5)) + Math.log(clusters);
+					System.out.println(Xu);
+					
+					System.out.println(" ");
+					System.out.println("Mejor Individuo:");
+					System.out.println(Arrays.toString(mejor.genes));*/
+					
+					//PrepararGrafico (mejor, mejor.numClusters);
+					
+					z = z +1;
+					
+					//Tabla de puntos con sus cluster asociado
+					ArmarTabla(mejor);
+					
+					//BanderaCancelar = true; // Condición para cancelar ejecución
+					
+				}
+				
+				int dimension1 = 0;
+				int dimension2 = 1;
+				
+				//Grafica todos los mejores
+				/*for (int i = 0; i < mejores.poblacion.length; i++) {
+					PrepararGrafico (mejores.poblacion[i], 
+							mejores.poblacion[i].numClusters, dimension1, dimension2);	
+				}*/
+				
+				//Grafica solo el mejor
+				PrepararGrafico (mejores.poblacion[mejorIndex], 
+								mejores.poblacion[mejorIndex].numClusters, dimension1, dimension2);
 			}
-			aux[dim] = mejor.genes[i];
-			salida.add(aux);
+				break;
 			
+			case 3:{}
 		}
-		double[] arreglo;
-		for (int i=0; i<numTransactions; i++) {
-			
-			arreglo = salida.get(i);
-			System.out.println(Arrays.toString(arreglo));
-		}*/
-		 
-		
+	
 	}
 		
 }

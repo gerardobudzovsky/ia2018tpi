@@ -47,6 +47,7 @@ public class Individuo {
 		double fitness;
 		int dimension;
 		ArrayList<double[]> dataset;
+		double calinski;
 		  
 		// Constructor que llena genes con random
 		Individuo(int n, int k, int d, ArrayList<double[]> itemset) {
@@ -95,6 +96,7 @@ public class Individuo {
 					
 		}
 		  
+		
 		  int[] getPhrase() {
 			  return genes;
 		  }
@@ -108,6 +110,10 @@ public class Individuo {
 		 
 		  void setCentroides (ArrayList<double[]> lista){
 			centroides = lista;
+		  }
+		  
+		  void setCalinski (double valor) {
+			  calinski = valor;
 		  }
 		  
 		  ArrayList<double[]> getCentroides(){

@@ -1,6 +1,7 @@
 package tpi;
 
 import java.awt.Color;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -19,16 +20,31 @@ import org.jfree.data.xy.XYSeriesCollection;
  */
 public class ScatterPlotExample extends JFrame {
   private static final long serialVersionUID = 6294689542092367723L;
-
-  public ScatterPlotExample(String title) {
-    super(title);
-
+  
+  String titulo;
+  int clusters;
+  Cluster[] componentes = new Cluster[clusters];
+  int dim1;
+  int dim2;
+  String superior;
+  
+  public ScatterPlotExample(String title, Cluster[] puntosxcluster, int numcluster, int dimension1,
+		  					int dimension2) {
+	
+	super(title);
+    clusters = numcluster;
+    dim1 = dimension1;
+    dim2 = dimension2;
+    componentes = puntosxcluster;
+    
+    
     // Create dataset
     XYDataset dataset = createDataset();
 
     // Create chart
+    superior = "Gráfico para: " + String.valueOf(clusters) + " clusters";
     JFreeChart chart = ChartFactory.createScatterPlot(
-        "Boys VS Girls weight comparison chart", 
+        superior,
         "X-Axis", "Y-Axis", dataset);
 
     
@@ -43,10 +59,22 @@ public class ScatterPlotExample extends JFrame {
   }
 
   private XYDataset createDataset() {
-    XYSeriesCollection dataset = new XYSeriesCollection();
-
+    //XYSeriesCollection dataset = new XYSeriesCollection();
+    
+        	
+    	XYSeriesCollection coleccion = new XYSeriesCollection();      
+    	for (int i = 0; i < clusters; i++) {             	
+    		XYSeries series = new XYSeries(i);         
+    		for (int j = 0; j < componentes[i].puntosAsociados.get(dim1).length; j++) {         	
+    			series.add(componentes[i].puntosAsociados.get(dim1)[j], 
+    						componentes[i].puntosAsociados.get(dim2)[j]);	
+    		}   
+    		coleccion.addSeries(series);
+    	}     
+    	return coleccion;
+    
     //Boys (Age,weight) series
-    XYSeries series1 = new XYSeries("Boys");
+    /*XYSeries series1 = new XYSeries("Boys");
     series1.add(1, 72.9);
     series1.add(2, 81.6);
     series1.add(3, 88.9);
@@ -75,10 +103,10 @@ public class ScatterPlotExample extends JFrame {
 
     dataset.addSeries(series2);
 
-    return dataset;
+    return dataset;*/
   }
 
-  public static void main(String[] args) {
+  /*public static void main(String[] args) {
     SwingUtilities.invokeLater(() -> {
       ScatterPlotExample example = new ScatterPlotExample("Scatter Chart Example | BORAJI.COM");
       example.setSize(800, 400);
@@ -86,5 +114,5 @@ public class ScatterPlotExample extends JFrame {
       example.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
       example.setVisible(true);
     });
-  }
+  }*/
 }
