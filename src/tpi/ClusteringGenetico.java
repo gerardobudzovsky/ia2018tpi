@@ -142,7 +142,7 @@ public class ClusteringGenetico {
 	}
 	
 	//Datos de entrada
-		static void Datos () throws Exception {
+		static void Datos() throws Exception {
 			
 			
 			int bandera = 0;
@@ -151,7 +151,8 @@ public class ClusteringGenetico {
 			
 			int i=0;
 			
-			transaFile = "D:/laWazada2.txt";
+			//transaFile = "dataset01.txt";
+			transaFile= VentanaPrincipal.getFile().getAbsolutePath();
 			
 			BufferedReader data = new BufferedReader(new FileReader(transaFile));
 		    	    		
@@ -244,16 +245,19 @@ public class ClusteringGenetico {
 			return interClust;
 		}
 	
-	public static void main (String[] args) throws Exception{
+	//public static void main (String[] args) throws Exception{
+	 public static void ejecutar() throws Exception{	
 		
-		int menu = 2;//1 - común, 2-rango, 3-comparación
-		Datos();
+		 int menu = 2;//1 - común, 2-rango, 3-comparación
+		 Datos();
+		 
+		 int clusterInicial = (int)VentanaPrincipal.obtenerSpinnerCantidadClusters().getValue();
 		
 		switch (menu) {
 		
 			case 1://común
 			{	
-				int clusterInicial = 5;//cantidad de clusters
+				//int clusterInicial = 5;//cantidad de clusters
 				int cantidadIndividuos = 100;
 				int seleccionar = 10;//porcentaje de selección
 				int cruzar = 60;//Porcentaje de cruza
@@ -417,7 +421,7 @@ public class ClusteringGenetico {
 			
 			case 2://rango
 			{	
-				int clusterInicial = 2;//cantidad de clusters
+				//int clusterInicial = 2;//cantidad de clusters
 				int cantidadIndividuos = 100;
 				int seleccionar = 10;//porcentaje de selección
 				int cruzar = 60;//Porcentaje de cruza
