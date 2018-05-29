@@ -56,6 +56,7 @@ public class ClusteringGenetico {
 				}
 			}
 		}
+		System.out.println("Cantidad de puntos por clúster");
 		System.out.println(Arrays.toString(ctidadPuntos));
 		
 		Cluster[] grafico = new Cluster[clusters];
@@ -83,7 +84,7 @@ public class ClusteringGenetico {
 		}
 		SwingUtilities.invokeLater(() -> {
 		      ScatterPlotExample example = new ScatterPlotExample("Gráfico", grafico, clusters, dimension1, dimension2);
-		      example.setSize(800, 400);
+		      example.setSize(800, 600);
 		      example.setLocationRelativeTo(null);
 		      example.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		      example.setVisible(true);
@@ -248,7 +249,7 @@ public class ClusteringGenetico {
 	//public static void main (String[] args) throws Exception{
 	 public static void ejecutar() throws Exception{	
 		
-		 int menu = 2;//1 - común, 2-rango, 3-comparación
+		 int menu = 1;//1 - común, 2-rango, 3-comparación
 		 Datos();
 		 
 		 int clusterInicial = (int)VentanaPrincipal.obtenerSpinnerCantidadClusters().getValue();
@@ -260,9 +261,9 @@ public class ClusteringGenetico {
 				//int clusterInicial = 5;//cantidad de clusters
 				int cantidadIndividuos = 100;
 				int seleccionar = 10;//porcentaje de selección
-				int cruzar = 60;//Porcentaje de cruza
-				int mutar = 30;//Porcentaje de mutación
-				int generaciones = 100;
+				int cruzar = 70;//Porcentaje de cruza
+				int mutar = 20;//Porcentaje de mutación
+				int generaciones = 200;
 				int clusterFinal = clusterInicial;
 				int diferencia = clusterFinal - clusterInicial;
 				Boolean BanderaCancelar = false; // bandera para cancelar
@@ -357,7 +358,9 @@ public class ClusteringGenetico {
 					calinski = numerador/denominador1;
 					System.out.println(" ");
 					System.out.println("Calinski y Harabasz");
-					System.out.println(calinski);
+					if (Double.isNaN(calinski)) {
+						System.out.println("No se puede calcular el índice, hay clústers vacíos");}
+						else {System.out.println(calinski);}
 					
 					mejor.calinski = calinski;//setear el valor del ínidice en el individuo
 					
@@ -382,7 +385,12 @@ public class ClusteringGenetico {
 					for (int i = 0; i < clusters; i++) {
 						double[] cent = new double [dim];
 						cent = mejor.centroides.get(i);
-						System.out.println(Arrays.toString(cent));
+						if (Double.isNaN(cent[0])) {
+							System.out.println(i + "- Cluster vacío");
+							
+							} else {
+								System.out.println(i + "- "+ Arrays.toString(cent));	
+							}						
 						
 					}
 					System.out.println(" ");
@@ -411,8 +419,8 @@ public class ClusteringGenetico {
 					
 				}
 				
-				int dimension1 = 0;
-				int dimension2 = 1;
+				int dimension1 = 0;//El usuario indica la dimensión 1 que desea graficar
+				int dimension2 = 1;//El usuario indica la dimensión 2 que desea graficar
 				
 				PrepararGrafico (mejores.poblacion[mejorIndex], 
 							mejores.poblacion[mejorIndex].numClusters, dimension1, dimension2);
@@ -521,7 +529,9 @@ public class ClusteringGenetico {
 					calinski = numerador/denominador1;
 					System.out.println(" ");
 					System.out.println("Calinski y Harabasz");
-					System.out.println(calinski);
+					if (Double.isNaN(calinski)) {
+						System.out.println("No se puede calcular el índice, hay clústers vacíos");}
+						else {System.out.println(calinski);}
 					
 					mejor.calinski = calinski;//setear el valor del ínidice en el individuo
 					
@@ -546,7 +556,12 @@ public class ClusteringGenetico {
 					for (int i = 0; i < clusters; i++) {
 						double[] cent = new double [dim];
 						cent = mejor.centroides.get(i);
-						System.out.println(Arrays.toString(cent));
+						if (Double.isNaN(cent[0])) {
+							System.out.println(i + "- Cluster vacío");
+							
+							} else {
+								System.out.println(i + "- "+ Arrays.toString(cent));	
+							}						
 						
 					}
 					System.out.println(" ");
@@ -575,8 +590,8 @@ public class ClusteringGenetico {
 					
 				}
 				
-				int dimension1 = 0;
-				int dimension2 = 1;
+				int dimension1 = 0;//El usuario indica la dimensión 1 que desea graficar
+				int dimension2 = 1;//El usuario indica la dimensión 2 que desea graficar
 				
 				//Grafica todos los mejores
 				/*for (int i = 0; i < mejores.poblacion.length; i++) {

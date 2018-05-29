@@ -157,7 +157,7 @@ public class Poblacion {
 	      for (int i = (cantcru + cantsel); i < poblacion.length; i++) {
 	    	  
 	    	  int a = AleatorioInt(0, matingPool.size());
-	    	  Individuo xmen = matingPool.get(a).mutar(tasaMutacion, 50);
+	    	  Individuo xmen = matingPool.get(a).mutar(tasaMutacion, 80);
 	    	  poblacionsig.poblacion[i] = xmen;
 	      }
 	      

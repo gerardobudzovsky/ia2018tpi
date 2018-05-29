@@ -138,10 +138,50 @@ public class Individuo {
 				return intraClust;
 			}
 		  
+		  static double SSB (Individuo mejor, int clusters, double[] media) {
+				double distance;
+				double interClust = 0;
+				for (int i = 0; i < clusters; i++) {
+					int cont = 0;
+					for (int j = 0; j < mejor.genes.length; j++) {
+						if (mejor.genes[j] == i) {
+							cont++;
+						}
+						//calcula distancia del centroide y la media del dataset al cuadrado
+						distance = Math.pow(calculateDistance(mejor.centroides.get(i), media),2.0);
+						interClust = interClust + (cont*distance);
+					}
+				}
+				return interClust;
+			}
+		  
+		  double[] calcMedia() {
+				
+				double[] media = new double[dimension];
+				for (int i = 0; i < dimension; i++) {
+					double acum = 0;
+					for (int j = 0; j < genes.length; j++) {
+						acum = acum + dataset.get(j)[i];
+					}
+					media[i] = acum;
+				}
+				/*for (int i = 0; i < dim; i++) {
+					media[i] = acum/(dim*numTransactions);
+				}*/
+				return media;
+			}
+		  
 		  //Función fitness
 		  double fitness (ArrayList<double[]> dataset) {
+			  
+			  double [] media = calcMedia();
+			  double inter = SSB (this, this.numClusters, media);
+			  double intra = SSW (this, this.numClusters, dataset);
+			  double resultado = inter/intra;
+			  fitness = resultado;
+			  return resultado;
 			 
-			 int j;
+			 /*int j;
 			 int k;
 		     double[] punto;
 		     double[] centroide;
@@ -165,7 +205,7 @@ public class Individuo {
 		     
 		     //Se invierte el valor para que el mayor fitness sea el mejor
 		     fitness = (1/sumatoria)*constanteFitness;
-		     return (1/sumatoria)*constanteFitness;
+		     return (1/sumatoria)*constanteFitness;*/
 		  }
 		  
 		  //Cruza simple
