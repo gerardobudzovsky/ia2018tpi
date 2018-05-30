@@ -21,7 +21,8 @@ public class ClusteringGenetico {
 	static int dim = 0;
 	static int numTransactions = 0;
 	static double MAX = 1.7E300;
-	
+	static double tiempoDeEjecucion;
+
 	//Imprime los puntos con sus clusters asociados
 	static void ArmarTabla(Individuo mejor){
 		ArrayList<double[]> salida = new ArrayList<double[]>();
@@ -249,6 +250,9 @@ public class ClusteringGenetico {
 	//public static void main (String[] args) throws Exception{
 	 public static void ejecutar() throws Exception{	
 		
+	     //hora de inicio de ejecucion del programa (en milisegundos)
+	     long horaInicioEjecucion = System.currentTimeMillis();
+	     
 		 int menu = (int)VentanaPrincipal.getMenu();//1 - común, 2-rango, 3-comparación
 		 Datos();		 
 		
@@ -439,8 +443,8 @@ public class ClusteringGenetico {
 				int seleccionar = (int)VentanaPrincipal.getSpinnerPorcentajeSeleccion().getValue();//porcentaje de selección
 				int cruzar = (int)VentanaPrincipal.getSpinnerPorcentajeCruza().getValue();//Porcentaje de cruza
 				int mutar = (int)VentanaPrincipal.getSpinnerPorcentajeMutacion().getValue();//Porcentaje de mutación
-				int generaciones = (int)VentanaPrincipal.getSpinnerCantidadGeneraciones().getValue();;
-				int clusterFinal = 7;
+				int generaciones = (int)VentanaPrincipal.getSpinnerCantidadGeneraciones().getValue();
+				int clusterFinal = (int)VentanaPrincipal.getSpinnerClusterFinal().getValue();
 				int diferencia = clusterFinal - clusterInicial;
 				Boolean BanderaCancelar = false; // bandera para cancelar
 				int z = 0; //indice del rango
@@ -478,7 +482,8 @@ public class ClusteringGenetico {
 			        }*/
 					
 					
-					System.out.println("Cantidad de Clusters:" + clusterInicial);
+					System.out.println("Cluster Inicial:" + clusterInicial);
+					System.out.println("Cluster Final:" + clusterFinal);
 					System.out.println("Porcentaje de Selección:" + seleccionar);
 					System.out.println("Porcentaje de Cruza:" + cruzar);
 					System.out.println("Porcentaje de Mutación:" + mutar);
@@ -620,6 +625,19 @@ public class ClusteringGenetico {
 			case 3:{}
 		}
 	
+		//hora de inicio de ejecucion del programa (en milisegundos)
+		long horaFinEjecucion = System.currentTimeMillis();
+		
+		//calculo el tiempo de ejecucion del programa (en segundos)
+		tiempoDeEjecucion= ((double)(horaFinEjecucion - horaInicioEjecucion)/1000);		
+	}
+	 
+	public static double getTiempoDeEjecucion() {
+		return tiempoDeEjecucion;
+	}
+
+	public static void setTiempoDeEjecucion(double tiempoDeEjecucion) {
+		ClusteringGenetico.tiempoDeEjecucion = tiempoDeEjecucion;
 	}
 		
 }

@@ -57,7 +57,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
     private static JSpinner spinnerCantidadGeneraciones;
     private static Boolean banderaCancelar;
     private JLabel lblClusterFinal;
-    private JSpinner spinnerClusterFinal;
+    private static JSpinner spinnerClusterFinal;
 
 	/**
 	 * Launch the application.
@@ -88,11 +88,19 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 		this.setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
+		this.banderaCancelar= false;
+		
 		botonEjecutar = new JButton("Ejecutar");
 		botonEjecutar.setBounds(39, 384, 89, 23);
 		botonEjecutar.addActionListener(this);
 		contentPane.add(botonEjecutar);
 		botonEjecutar.setVisible(false);
+		
+		botonCancelar = new JButton("Cancelar");
+		botonCancelar.setBounds(157, 384, 89, 23);
+		botonCancelar.addActionListener(this);
+		contentPane.add(botonCancelar);
+		botonCancelar.setVisible(false);
 		
 		labelCantidadClusters = new JLabel("labelCantidadClusters");
 		labelCantidadClusters.setBounds(39, 187, 141, 14);
@@ -104,6 +112,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 		spinnerCantidadClusters.setModel(new SpinnerNumberModel(2,2,100,1));
 		contentPane.add(spinnerCantidadClusters);
 		spinnerCantidadClusters.setVisible(false);
+		spinnerCantidadClusters.setEnabled(false);
 		
 		fc = new JFileChooser("C:\\");
 		
@@ -193,19 +202,19 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 		contentPane.add(spinnerCantidadGeneraciones);
 		spinnerCantidadGeneraciones.setVisible(false);
 		
-		botonCancelar = new JButton("Cancelar");
-		botonCancelar.setBounds(157, 384, 89, 23);
-		contentPane.add(botonCancelar);
-		
 		lblClusterFinal = new JLabel("Cluster Final:");
 		lblClusterFinal.setBounds(293, 187, 73, 14);
 		contentPane.add(lblClusterFinal);
+		lblClusterFinal.setVisible(false);
 		
 		spinnerClusterFinal = new JSpinner();
 		spinnerClusterFinal.setBounds(376, 184, 39, 20);
-		spinnerClusterFinal.setModel(new SpinnerNumberModel(5,1,100,1));
+		spinnerClusterFinal.setModel(new SpinnerNumberModel(3,3,100,1));
 		contentPane.add(spinnerClusterFinal);
-		lblClusterFinal.setVisible(false);
+		spinnerClusterFinal.setVisible(false);
+		spinnerClusterFinal.setEnabled(false);
+		
+		
 
 	}
 	
@@ -213,8 +222,9 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 	public void stateChanged(ChangeEvent arg0) {
 		
         if (rdbtnClusteringGenetico.isSelected()) {    	
-        	this.setMenu(1);
+        	this.menu= 1;
         	botonEjecutar.setVisible(true);
+        	botonCancelar.setVisible(true);
         	botonSeleccionarArchivo.setVisible(true);
         	spinnerCantidadClusters.setVisible(true);
         	labelCantidadClusters.setText("Cantidad de Clusters:");
@@ -229,10 +239,13 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
     		lblCantidadGeneraciones.setVisible(true);
     		spinnerCantidadIndividuos.setVisible(true);
     		spinnerCantidadGeneraciones.setVisible(true);
+    		lblClusterFinal.setVisible(false);
+    		spinnerClusterFinal.setVisible(false);
         }
         if (rdbtnClusteringGeneticoPor.isSelected()) {
-        	this.setMenu(2);
+        	this.menu= 2;
         	botonEjecutar.setVisible(true);
+        	botonCancelar.setVisible(true);
         	botonSeleccionarArchivo.setVisible(true);
         	spinnerCantidadClusters.setVisible(true);
         	labelCantidadClusters.setText("Cluster Inicial:");
@@ -247,10 +260,12 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
     		spinnerCantidadIndividuos.setVisible(true);
     		spinnerCantidadGeneraciones.setVisible(true);
     		lblClusterFinal.setVisible(true);
+    		spinnerClusterFinal.setVisible(true);
         }
         if (rdbtnComparacinConKmeans.isSelected()) {
-        	this.setMenu(3);
+        	this.menu= 3;
         	botonEjecutar.setVisible(true);
+        	botonCancelar.setVisible(true);
         	botonSeleccionarArchivo.setVisible(true);
         	spinnerCantidadClusters.setVisible(true);
         	labelCantidadClusters.setVisible(true);
@@ -263,26 +278,10 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
     		lblCantidadGeneraciones.setVisible(true);
     		spinnerCantidadIndividuos.setVisible(true);
     		spinnerCantidadGeneraciones.setVisible(true);
+    		lblClusterFinal.setVisible(false);
+    		spinnerClusterFinal.setVisible(false);
         } 
 		
-	}
-
-	
-	public int obtenerNumeroDeTransacciones() throws Exception {
-		
-		String archivoTransacciones;   			
-		archivoTransacciones= VentanaPrincipal.getFile().getAbsolutePath();
-        BufferedReader data_in = new BufferedReader(new FileReader(archivoTransacciones));
-    	while (data_in.ready()) {    		
-    		String line=data_in.readLine();
-                
-    		if (line.matches("\\s*")) {
-    			continue; // saltar lineas vacias
-    		}
-    		
-    		numeroTransacciones++;
-    	}
-    	return numeroTransacciones++;
 	}
 	
 	@Override
@@ -299,8 +298,12 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
                //lblArchivoSubido.setText(file.getName());
                
                try {
-            	int cantidadClustersMenosUno= this.obtenerNumeroDeTransacciones() - 1;
-				spinnerCantidadClusters.setModel(new SpinnerNumberModel(2,2,cantidadClustersMenosUno,1));
+            	int cantidadTransaccionesMenosUno= this.obtenerNumeroDeTransacciones() - 1;            	
+            	spinnerCantidadClusters.setModel(new SpinnerNumberModel(2,2,cantidadTransaccionesMenosUno,1));
+            	spinnerCantidadClusters.setEnabled(true);
+            	spinnerClusterFinal.setModel(new SpinnerNumberModel(3,3,cantidadTransaccionesMenosUno,1));
+				spinnerClusterFinal.setEnabled(true);
+				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -313,20 +316,29 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 		
 		if (evento.getSource() == botonEjecutar) {
 			
-			int sumaPorcentajes= (int)this.getSpinnerPorcentajeSeleccion().getValue() + (int)this.getSpinnerPorcentajeCruza().getValue() + (int)this.getSpinnerPorcentajeMutacion().getValue();
+			boolean existeError;
+			existeError= false;
+			int sumaPorcentajes= (int)this.spinnerPorcentajeSeleccion.getValue() + (int)this.spinnerPorcentajeCruza.getValue() + (int)this.spinnerPorcentajeMutacion.getValue();
 			if (sumaPorcentajes != 100) {
+				existeError= true;
 				JOptionPane.showMessageDialog(null, "La sumatoria de los porcentajes de selección, cruza y mutación debe sumar 100", "Error", JOptionPane.ERROR_MESSAGE);
-			}			
+			}
+			
+			if (((int)this.spinnerClusterFinal.getValue() <= (int)this.spinnerCantidadClusters.getValue()) & (this.menu == 2)) {
+				existeError= true; 
+				JOptionPane.showMessageDialog(null, "El cluster final no puede ser menor o igual al cluster inicial", "Error", JOptionPane.ERROR_MESSAGE);
+			}
+			
+			if(file == null){
+				existeError= true;
+				JOptionPane.showMessageDialog(null, "Especificar el archivo dataset", "Error", JOptionPane.ERROR_MESSAGE);
+            }
 			
 			try {
-				
-                if(file == null){
-                    JOptionPane.showMessageDialog(null, "Especificar archivo dataset", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-                else {
-    				ClusteringGenetico.ejecutar();
-                }				
-
+				if (existeError == false) {
+					ClusteringGenetico.ejecutar();
+					JOptionPane.showMessageDialog(null, "El tiempo de ejecución del programa fue de "+ClusteringGenetico.getTiempoDeEjecucion()+" segundos.", "Información", JOptionPane.INFORMATION_MESSAGE);
+				}				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -334,10 +346,27 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 		}
 		
 		if (evento.getSource() == botonCancelar) {			
-			this.setBanderaCancelar(true);
-			JOptionPane.showMessageDialog(null, "Ejecución Cancelar", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+			this.banderaCancelar= true;
+			JOptionPane.showMessageDialog(null, "Ejecución Cancelada", "Aviso", JOptionPane.INFORMATION_MESSAGE);
 		}
 		
+	}
+	
+	public int obtenerNumeroDeTransacciones() throws Exception {
+		
+		String archivoTransacciones;   			
+		archivoTransacciones= file.getAbsolutePath();
+        BufferedReader data_in = new BufferedReader(new FileReader(archivoTransacciones));
+    	while (data_in.ready()) {    		
+    		String line= data_in.readLine();
+                
+    		if (line.matches("\\s*")) {
+    			continue; // saltar lineas vacias
+    		}
+    		
+    		numeroTransacciones++;
+    	}
+    	return numeroTransacciones++;
 	}
 	
 	public static JSpinner obtenerSpinnerCantidadClusters() {
@@ -419,4 +448,13 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 	public static void setBanderaCancelar(Boolean banderaCancelar) {
 		VentanaPrincipal.banderaCancelar = banderaCancelar;
 	}
+
+	public static JSpinner getSpinnerClusterFinal() {
+		return spinnerClusterFinal;
+	}
+
+	public static void setSpinnerClusterFinal(JSpinner spinnerClusterFinal) {
+		VentanaPrincipal.spinnerClusterFinal = spinnerClusterFinal;
+	}
+	
 }
