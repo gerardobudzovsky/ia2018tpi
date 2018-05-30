@@ -249,21 +249,19 @@ public class ClusteringGenetico {
 	//public static void main (String[] args) throws Exception{
 	 public static void ejecutar() throws Exception{	
 		
-		 int menu = 1;//1 - común, 2-rango, 3-comparación
-		 Datos();
-		 
-		 int clusterInicial = (int)VentanaPrincipal.obtenerSpinnerCantidadClusters().getValue();
+		 int menu = (int)VentanaPrincipal.getMenu();//1 - común, 2-rango, 3-comparación
+		 Datos();		 
 		
 		switch (menu) {
 		
 			case 1://común
 			{	
-				//int clusterInicial = 5;//cantidad de clusters
-				int cantidadIndividuos = 100;
-				int seleccionar = 10;//porcentaje de selección
-				int cruzar = 70;//Porcentaje de cruza
-				int mutar = 20;//Porcentaje de mutación
-				int generaciones = 200;
+				int clusterInicial = (int)VentanaPrincipal.obtenerSpinnerCantidadClusters().getValue();
+				int cantidadIndividuos = (int)VentanaPrincipal.getSpinnerCantidadIndividuos().getValue();
+				int seleccionar = (int)VentanaPrincipal.getSpinnerPorcentajeSeleccion().getValue();//porcentaje de selección
+				int cruzar = (int)VentanaPrincipal.getSpinnerPorcentajeCruza().getValue();//Porcentaje de cruza
+				int mutar = (int)VentanaPrincipal.getSpinnerPorcentajeMutacion().getValue();//Porcentaje de mutación
+				int generaciones = (int)VentanaPrincipal.getSpinnerCantidadGeneraciones().getValue();
 				int clusterFinal = clusterInicial;
 				int diferencia = clusterFinal - clusterInicial;
 				Boolean BanderaCancelar = false; // bandera para cancelar
@@ -302,6 +300,13 @@ public class ClusteringGenetico {
 			        }*/
 					
 					
+					System.out.println("Cantidad de Clusters:" + clusterInicial);
+					System.out.println("Porcentaje de Selección:" + seleccionar);
+					System.out.println("Porcentaje de Cruza:" + cruzar);
+					System.out.println("Porcentaje de Mutación:" + mutar);
+					System.out.println("Cantidad de Individuos:" + cantidadIndividuos);
+					System.out.println("Cantidad de Generaciones:" + generaciones);
+					
 					//Inicia el AG
 					for (int i = 0; i<generaciones; i++) {
 									
@@ -415,7 +420,7 @@ public class ClusteringGenetico {
 					//Tabla de puntos con sus cluster asociado
 					ArmarTabla(mejor);
 					
-					//BanderaCancelar = true; // Condición para cancelar ejecución
+					BanderaCancelar = (boolean)VentanaPrincipal.getBanderaCancelar(); // Condición para cancelar ejecución
 					
 				}
 				
@@ -429,12 +434,12 @@ public class ClusteringGenetico {
 			
 			case 2://rango
 			{	
-				//int clusterInicial = 2;//cantidad de clusters
-				int cantidadIndividuos = 100;
-				int seleccionar = 10;//porcentaje de selección
-				int cruzar = 60;//Porcentaje de cruza
-				int mutar = 30;//Porcentaje de mutación
-				int generaciones = 100;
+				int clusterInicial = (int)VentanaPrincipal.obtenerSpinnerCantidadClusters().getValue();
+				int cantidadIndividuos = (int)VentanaPrincipal.getSpinnerCantidadIndividuos().getValue();
+				int seleccionar = (int)VentanaPrincipal.getSpinnerPorcentajeSeleccion().getValue();//porcentaje de selección
+				int cruzar = (int)VentanaPrincipal.getSpinnerPorcentajeCruza().getValue();//Porcentaje de cruza
+				int mutar = (int)VentanaPrincipal.getSpinnerPorcentajeMutacion().getValue();//Porcentaje de mutación
+				int generaciones = (int)VentanaPrincipal.getSpinnerCantidadGeneraciones().getValue();;
 				int clusterFinal = 7;
 				int diferencia = clusterFinal - clusterInicial;
 				Boolean BanderaCancelar = false; // bandera para cancelar
@@ -473,6 +478,13 @@ public class ClusteringGenetico {
 			        }*/
 					
 					
+					System.out.println("Cantidad de Clusters:" + clusterInicial);
+					System.out.println("Porcentaje de Selección:" + seleccionar);
+					System.out.println("Porcentaje de Cruza:" + cruzar);
+					System.out.println("Porcentaje de Mutación:" + mutar);
+					System.out.println("Cantidad de Individuos:" + cantidadIndividuos);
+					System.out.println("Cantidad de Generaciones:" + generaciones);
+					
 					//Inicia el AG
 					for (int i = 0; i<generaciones; i++) {
 									
@@ -586,7 +598,7 @@ public class ClusteringGenetico {
 					//Tabla de puntos con sus cluster asociado
 					ArmarTabla(mejor);
 					
-					//BanderaCancelar = true; // Condición para cancelar ejecución
+					BanderaCancelar = (boolean)VentanaPrincipal.getBanderaCancelar(); // Condición para cancelar ejecución
 					
 				}
 				
@@ -611,7 +623,3 @@ public class ClusteringGenetico {
 	}
 		
 }
-		
-		
-		
-			
