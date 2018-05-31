@@ -103,7 +103,8 @@ public static void PrepararGrafico (IndividuoK ind, int clusters, int dimension1
 	
 	static void Datos () throws Exception {
 		
-		
+		itemset.clear();
+		numTransactions = 0;
 		int bandera = 0;
 		String transaFile;
 		TreeSet<String> itemsetst = new TreeSet<String>();

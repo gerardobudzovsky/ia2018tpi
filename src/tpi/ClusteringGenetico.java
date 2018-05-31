@@ -21,7 +21,7 @@ public class ClusteringGenetico {
 	static int dim = 0;
 	static int numTransactions = 0;
 	static double MAX = 1.7E300;
-	static double tiempoDeEjecucion;
+	static double tiempoDeEjecucion = 0;
 
 	//Imprime los puntos con sus clusters asociados
 	static void ArmarTabla(Individuo mejor){
@@ -146,7 +146,8 @@ public class ClusteringGenetico {
 	//Datos de entrada
 		static void Datos() throws Exception {
 			
-			
+			itemset.clear();
+			numTransactions =0;
 			int bandera = 0;
 			String transaFile;
 			TreeSet<String> itemsetst = new TreeSet<String>();
