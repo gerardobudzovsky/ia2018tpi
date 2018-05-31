@@ -434,7 +434,7 @@ public class ClusteringGenetico {
 				}
 				
 				int dimension1 = 1;//El usuario indica la dimensión 1 que desea graficar
-				int dimension2 = 3;//El usuario indica la dimensión 2 que desea graficar
+				int dimension2 = 2;//El usuario indica la dimensión 2 que desea graficar
 				
 				PrepararGrafico (mejores.poblacion[mejorIndex], 
 							mejores.poblacion[mejorIndex].numClusters, (dimension1-1), (dimension2-1));
@@ -616,7 +616,7 @@ public class ClusteringGenetico {
 				}
 				
 				int dimension1 = 1;//El usuario indica la dimensión 1 que desea graficar
-				int dimension2 = 3;//El usuario indica la dimensión 2 que desea graficar
+				int dimension2 = 2;//El usuario indica la dimensión 2 que desea graficar
 				
 				//Grafica todos los mejores
 				/*for (int i = 0; i < mejores.poblacion.length; i++) {
