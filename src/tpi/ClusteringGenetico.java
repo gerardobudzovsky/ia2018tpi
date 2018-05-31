@@ -146,6 +146,7 @@ public class ClusteringGenetico {
 	//Datos de entrada
 		static void Datos() throws Exception {
 			
+			dim = 0;
 			itemset.clear();
 			numTransactions =0;
 			int bandera = 0;

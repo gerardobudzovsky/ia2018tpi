@@ -103,6 +103,7 @@ public static void PrepararGrafico (IndividuoK ind, int clusters, int dimension1
 	
 	static void Datos () throws Exception {
 		
+		dim = 0;
 		itemset.clear();
 		numTransactions = 0;
 		int bandera = 0;
