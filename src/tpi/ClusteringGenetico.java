@@ -389,8 +389,11 @@ public class ClusteringGenetico {
 					
 					System.out.println(" ");
 					System.out.println("Fitness:");
+					if (Double.isNaN(mejor.fitness)) {
+						System.out.println("No se puede calcular el fitness, hay clusters vacíos");
+					} else {
 					System.out.println(mejor.fitness);
-					System.out.println(" ");
+					System.out.println(" ");}
 					
 					System.out.println("Centroides:");
 					for (int i = 0; i < clusters; i++) {
@@ -430,11 +433,11 @@ public class ClusteringGenetico {
 					
 				}
 				
-				int dimension1 = 0;//El usuario indica la dimensión 1 que desea graficar
-				int dimension2 = 1;//El usuario indica la dimensión 2 que desea graficar
+				int dimension1 = 1;//El usuario indica la dimensión 1 que desea graficar
+				int dimension2 = 3;//El usuario indica la dimensión 2 que desea graficar
 				
 				PrepararGrafico (mejores.poblacion[mejorIndex], 
-							mejores.poblacion[mejorIndex].numClusters, dimension1, dimension2);
+							mejores.poblacion[mejorIndex].numClusters, (dimension1-1), (dimension2-1));
 				}
 				break;
 			
@@ -568,8 +571,11 @@ public class ClusteringGenetico {
 					
 					System.out.println(" ");
 					System.out.println("Fitness:");
+					if (Double.isNaN(mejor.fitness)) {
+						System.out.println("No se puede calcular el fitness, hay clusters vacíos");
+					} else {
 					System.out.println(mejor.fitness);
-					System.out.println(" ");
+					System.out.println(" ");}
 					
 					System.out.println("Centroides:");
 					for (int i = 0; i < clusters; i++) {
@@ -609,8 +615,8 @@ public class ClusteringGenetico {
 					
 				}
 				
-				int dimension1 = 0;//El usuario indica la dimensión 1 que desea graficar
-				int dimension2 = 1;//El usuario indica la dimensión 2 que desea graficar
+				int dimension1 = 1;//El usuario indica la dimensión 1 que desea graficar
+				int dimension2 = 3;//El usuario indica la dimensión 2 que desea graficar
 				
 				//Grafica todos los mejores
 				/*for (int i = 0; i < mejores.poblacion.length; i++) {
@@ -620,7 +626,7 @@ public class ClusteringGenetico {
 				
 				//Grafica solo el mejor
 				PrepararGrafico (mejores.poblacion[mejorIndex], 
-								mejores.poblacion[mejorIndex].numClusters, dimension1, dimension2);
+								mejores.poblacion[mejorIndex].numClusters, (dimension1-1), (dimension2-1));
 			}
 				break;
 			

@@ -112,7 +112,7 @@ public static void PrepararGrafico (IndividuoK ind, int clusters, int dimension1
 		
 		int i=0;
 		
-		transaFile = "D:/laWazada2.txt";
+		transaFile = "D:/4 dimensiones.txt";
 		
 		BufferedReader data = new BufferedReader(new FileReader(transaFile));
 	    	    		
@@ -222,9 +222,11 @@ public static void PrepararGrafico (IndividuoK ind, int clusters, int dimension1
 				
 			}
 			System.out.println(" ");
+			int dimension1 = 1;//El usuario indica la dimensión 1 que desea graficar
+			int dimension2 = 2;//El usuario indica la dimensión 2 que desea graficar
 				
 			
-			PrepararGrafico (IndividuoK, IndividuoK.numClusters, 0, 1);
+			PrepararGrafico (IndividuoK, IndividuoK.numClusters, (dimension1-1), (dimension2-1));
 			
 			
 	}

@@ -60,7 +60,41 @@ public class IndividuoK {
 			// "d" dimension	
 		IndividuoK(int n, int k, int d, ArrayList<double[]> itemset) {
 			  
-			  dataset = itemset;
+				 dataset = itemset;
+			  dimension = d;
+			  numClusters = k;
+			  
+			  Random r = new Random(); //Generador random de 1 a punto ni
+			  int Low = 0;
+		      int High = n;
+			  genes = new int[n];
+			  double[] centroide = new double[d];
+			  double min;
+			  double distancia;
+			  int i;
+			  
+			  for (i = 0; i < numClusters; i++) {
+				  
+				  centroide = dataset.get(r.nextInt(High-Low) + Low);
+				  centroides.add(centroide);
+				  
+			  }
+		      
+		    	  for (int j = 0; j < n; j++) {
+		    		  min = MAX1;
+		    		  for (i = 0; i < numClusters; i++) {
+				    	  
+				    	  distancia = calculateDistance(centroides.get(i), dataset.get(j));
+			    		  if (distancia < min) {
+			    			  genes[j] = i;
+			    			  min = distancia;
+			    		  }
+		    		  }
+		    		  //genes[i] = r.nextInt(High-Low) + Low;
+		      
+		    	  }
+			  
+			  /*dataset = itemset;
 			  dimension = d;
 			  numClusters = k;
 			  
@@ -103,7 +137,7 @@ public class IndividuoK {
 		    		  }
 		    		  //genes[i] = r.nextInt(High-Low) + Low;
 		      
-		    	  }
+		    	  }*/
 		  }
 		
 		//Constructor IndividuoK sin genes random
