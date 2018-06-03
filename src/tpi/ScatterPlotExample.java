@@ -42,15 +42,13 @@ public class ScatterPlotExample extends JFrame {
     XYDataset dataset = createDataset();
 
     // Create chart
-    superior = "Gráfico para: " + String.valueOf(clusters) + " clusters";
-    JFreeChart chart = ChartFactory.createScatterPlot(
-        superior,
-        "X-Axis", "Y-Axis", dataset);
+    superior = "Gráfico " + title + " para: " + String.valueOf(clusters) + " clusters";     
+    JFreeChart chart = ChartFactory.createScatterPlot(superior, "X-Axis", "Y-Axis", dataset);
 
     
     //Changes background color
     XYPlot plot = (XYPlot)chart.getPlot();
-    plot.setBackgroundPaint(new Color(255,228,196));
+    plot.setBackgroundPaint(new Color(223, 220, 227));
     
    
     // Create Panel

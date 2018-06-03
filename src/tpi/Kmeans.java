@@ -13,6 +13,7 @@ import javax.swing.WindowConstants;
 
 public class Kmeans {
 	
+	static private final String newline = "\n";
 	static double MAX1 = 1.7E300;//Máximo double
 	static ArrayList<double[]> itemset = new ArrayList<double[]>();
 	static int dim = 0;
@@ -56,11 +57,13 @@ public static void PrepararGrafico (IndividuoK ind, int clusters, int dimension1
 			
 		}
 		SwingUtilities.invokeLater(() -> {
-		      ScatterPlotExample example = new ScatterPlotExample("Gráfico", grafico, clusters, dimension1, dimension2);
-		      example.setSize(800, 600);
-		      example.setLocationRelativeTo(null);
-		      example.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		      example.setVisible(true);
+		      ScatterPlotExample example = new ScatterPlotExample("K-Means", grafico, clusters, dimension1, dimension2);
+		      example.setBounds(300, 250, 640, 480);
+//		      example.setSize(800, 600);
+//		      example.setLocationRelativeTo(null);		      
+		      example.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+		      example.setVisible(false);
+		      VentanaPrincipal.setGrafico2(example);
 		    });
 	}
 	
@@ -101,7 +104,7 @@ public static void PrepararGrafico (IndividuoK ind, int clusters, int dimension1
 		}*/
 	}
 	
-	static void Datos () throws Exception {
+	static void Datos() throws Exception {
 		
 		dim = 0;
 		itemset.clear();
@@ -112,7 +115,9 @@ public static void PrepararGrafico (IndividuoK ind, int clusters, int dimension1
 		
 		int i=0;
 		
-		transaFile = "D:/4 dimensiones.txt";
+		//transaFile = "D:/4 dimensiones.txt";
+		transaFile= VentanaPrincipal.getFile().getAbsolutePath();
+
 		
 		BufferedReader data = new BufferedReader(new FileReader(transaFile));
 	    	    		
@@ -154,10 +159,11 @@ public static void PrepararGrafico (IndividuoK ind, int clusters, int dimension1
 		}*/							
 	}
 	
-	public static void main (String[] args) throws Exception{
+	//public static void main (String[] args) throws Exception{
+	public static void ejecutar() throws Exception{
 			
-			Datos();
-			int clusters = 5;
+			Kmeans.Datos();
+			int clusters = (int)VentanaPrincipal.obtenerSpinnerCantidadClusters().getValue();;
 			int dimension = dim;
 			int tamEntrada = numTransactions;
 			double Low = 0.0; //para random
@@ -204,31 +210,54 @@ public static void PrepararGrafico (IndividuoK ind, int clusters, int dimension1
 				System.out.println(IndividuoK.fitness);	
 		    
 			}
-			
-			System.out.println(Arrays.toString(IndividuoK.genes));
+						
+			System.out.println("VALORES DEL ALGORITMO K-MEANS");
+			VentanaPrincipal.getTextArea1().append("VALORES DEL ALGORITMO K-MEANS" + newline);
+//			VentanaPrincipal.getTextArea1().append(newline);
+
+
+			if (Double.isNaN(IndividuoK.fitness)) {
+				System.out.println("No se puede calcular el fitness, hay clusters vacíos.");
+				VentanaPrincipal.getTextArea1().append("No se puede calcular el fitness, hay clusters vacíos." + newline);
+			} else {
 			System.out.println(IndividuoK.fitness);
-			System.out.println(h);
+			VentanaPrincipal.getTextArea1().append("Fitness: " + IndividuoK.fitness + "." + newline);
+			}		
+			
+			VentanaPrincipal.getTextArea1().append(newline);			
 			
 			System.out.println("Centroides:");
+			VentanaPrincipal.getTextArea1().append("Centroides" + newline);
+
 			for (int a = 0; a < clusters; a++) {
 				double[] cent = new double [dim];
 				cent = IndividuoK.centroides.get(a);
 				if (Double.isNaN(cent[0])) {
-					System.out.println(a + "- Cluster vacío");
-					
-					} else {
-						System.out.println(a + "- "+ Arrays.toString(cent));	
-					}						
+					System.out.println(a + "- Cluster vacío");	
+					VentanaPrincipal.getTextArea1().append(a + "- Cluster vacío" + newline);
+
+				} else {
+					System.out.println(a + "- "+ Arrays.toString(cent));
+					VentanaPrincipal.getTextArea1().append(a + "- "+ Arrays.toString(cent) + newline);
+			}						
 				
 			}
 			System.out.println(" ");
-			int dimension1 = 1;//El usuario indica la dimensión 1 que desea graficar
-			int dimension2 = 2;//El usuario indica la dimensión 2 que desea graficar
+			VentanaPrincipal.getTextArea1().append(newline);			
+
+			int dimension1 = (int)VentanaPrincipal.getSpinnerDimensionX().getValue();//El usuario indica la dimensión 1 que desea graficar
+			int dimension2 = (int)VentanaPrincipal.getSpinnerDimensionY().getValue();//El usuario indica la dimensión 2 que desea graficar
 				
 			
 			PrepararGrafico (IndividuoK, IndividuoK.numClusters, (dimension1-1), (dimension2-1));
 			
 			
 	}
+	
+	 static double trunc (double num) {
+		 double truncado;
+		 truncado=Math.floor(num*1000)/1000; 
+		 return truncado;
+	 }
 
 }

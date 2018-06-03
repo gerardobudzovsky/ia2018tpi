@@ -1,5 +1,6 @@
 package tpi;
 
+import java.awt.Font;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -17,6 +18,7 @@ import javax.swing.WindowConstants;
 
 public class ClusteringGenetico {
 	
+	static private final String newline = "\n";
 	static ArrayList<double[]> itemset = new ArrayList<double[]>();
 	static int dim = 0;
 	static int numTransactions = 0;
@@ -46,7 +48,7 @@ public class ClusteringGenetico {
 		}
 	}
 	
-	public static void PrepararGrafico (Individuo ind, int clusters, int dimension1, int dimension2) {
+	public static void PrepararGrafico(Individuo ind, int clusters, int dimension1, int dimension2) {
 		
 		int[] ctidadPuntos = new int[clusters];
 		
@@ -84,11 +86,13 @@ public class ClusteringGenetico {
 			
 		}
 		SwingUtilities.invokeLater(() -> {
-		      ScatterPlotExample example = new ScatterPlotExample("Gráfico", grafico, clusters, dimension1, dimension2);
-		      example.setSize(800, 600);
-		      example.setLocationRelativeTo(null);
-		      example.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		      example.setVisible(true);
+		      ScatterPlotExample example = new ScatterPlotExample("Genético", grafico, clusters, dimension1, dimension2);
+		      example.setBounds(710, 10 , 640, 480);
+//		      example.setSize(800, 600);
+//		      example.setLocationRelativeTo(null);
+		      example.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+		      example.setVisible(false);
+		      VentanaPrincipal.setGrafico1(example);		      
 		    });
 	}
 	
@@ -256,7 +260,7 @@ public class ClusteringGenetico {
 	     long horaInicioEjecucion = System.currentTimeMillis();
 	     
 		 int menu = (int)VentanaPrincipal.getMenu();//1 - común, 2-rango, 3-comparación
-		 Datos();		 
+		 ClusteringGenetico.Datos();		 
 		
 		switch (menu) {
 		
@@ -275,6 +279,8 @@ public class ClusteringGenetico {
 				int m = 0; //indice de la poblacion de mejores
 				double mejorCalinski = 0; //Para determinar la mejor clasificación de clusters
 				int mejorIndex = 0;
+				int dimensionX = (int)VentanaPrincipal.getSpinnerDimensionX().getValue();//El usuario indica la dimensión 1 que desea graficar
+				int dimensionY = (int)VentanaPrincipal.getSpinnerDimensionY().getValue();//El usuario indica la dimensión 2 que desea graficar
 				
 				//Crear población donde se gurdan los mejores de cada número de clusters
 				Poblacion mejores = new Poblacion(itemset, 0, diferencia+1, 
@@ -369,9 +375,16 @@ public class ClusteringGenetico {
 					calinski = numerador/denominador1;
 					System.out.println(" ");
 					System.out.println("Calinski y Harabasz");
+//					VentanaPrincipal.getTextArea1().append("Calinski y Harabasz" + newline);
 					if (Double.isNaN(calinski)) {
-						System.out.println("No se puede calcular el índice, hay clústers vacíos");}
-						else {System.out.println(calinski);}
+						System.out.println("No se puede calcular el índice, hay clústers vacíos");
+						VentanaPrincipal.getTextArea1().append("No se puede calcular el índice, hay clústers vacíos." + newline);
+					}
+					else {
+						System.out.println(calinski);
+						VentanaPrincipal.getTextArea1().append("Índice Calinski y Harabasz: " + calinski + newline);
+
+					}
 					
 					mejor.calinski = calinski;//setear el valor del ínidice en el individuo
 					
@@ -384,32 +397,42 @@ public class ClusteringGenetico {
 					}
 					//Aumenta el ínidice de la población de mejores
 					m = m + 1;
-					
-					
-					
+										
 					System.out.println(" ");
+					VentanaPrincipal.getTextArea1().append(newline);
+					
 					System.out.println("Fitness:");
+//					VentanaPrincipal.getTextArea1().append("Fitness." + newline);
+					
 					if (Double.isNaN(mejor.fitness)) {
-						System.out.println("No se puede calcular el fitness, hay clusters vacíos");
+						System.out.println("No se puede calcular el fitness, hay clusters vacíos.");
+						VentanaPrincipal.getTextArea1().append("No se puede calcular el fitness, hay clusters vacíos." + newline);
 					} else {
 					System.out.println(mejor.fitness);
-					System.out.println(" ");}
+					VentanaPrincipal.getTextArea1().append("Fitness: " + mejor.fitness + "." + newline);
+					}
+					
+					System.out.println("");
+					VentanaPrincipal.getTextArea1().append(newline);
+
 					
 					System.out.println("Centroides:");
+					VentanaPrincipal.getTextArea1().append("Centroides" + newline);
 					for (int i = 0; i < clusters; i++) {
 						double[] cent = new double [dim];
 						cent = mejor.centroides.get(i);
 						if (Double.isNaN(cent[0])) {
 							System.out.println(i + "- Cluster vacío");
-							
+							VentanaPrincipal.getTextArea1().append(i + "- Cluster vacío." + newline);							
 							} else {
-								System.out.println(i + "- "+ Arrays.toString(cent));	
+								System.out.println(i + "- "+ Arrays.toString(cent));
+								VentanaPrincipal.getTextArea1().append(i + "- "+ Arrays.toString(cent) + newline);
 							}						
 						
 					}
-					System.out.println(" ");
-											
-					
+					System.out.println(" ");					
+					VentanaPrincipal.getTextArea1().append(newline);
+
 					
 					/*System.out.println(" ");
 					System.out.println("Xu");
@@ -433,11 +456,8 @@ public class ClusteringGenetico {
 					
 				}
 				
-				int dimension1 = 1;//El usuario indica la dimensión 1 que desea graficar
-				int dimension2 = 2;//El usuario indica la dimensión 2 que desea graficar
-				
-				PrepararGrafico (mejores.poblacion[mejorIndex], 
-							mejores.poblacion[mejorIndex].numClusters, (dimension1-1), (dimension2-1));
+				PrepararGrafico(mejores.poblacion[mejorIndex], 
+							mejores.poblacion[mejorIndex].numClusters, (dimensionX-1), (dimensionY-1));
 				}
 				break;
 			
@@ -456,6 +476,8 @@ public class ClusteringGenetico {
 				int m = 0; //indice de la poblacion de mejores
 				double mejorCalinski = 0; //Para determinar la mejor clasificación de clusters
 				int mejorIndex = 0;
+				int dimensionX = (int)VentanaPrincipal.getSpinnerDimensionX().getValue();//El usuario indica la dimensión 1 que desea graficar
+				int dimensionY = (int)VentanaPrincipal.getSpinnerDimensionY().getValue();//El usuario indica la dimensión 2 que desea graficar
 				
 				//Crear población donde se gurdan los mejores de cada número de clusters
 				Poblacion mejores = new Poblacion(itemset, 0, diferencia+1, 
@@ -552,8 +574,11 @@ public class ClusteringGenetico {
 					System.out.println(" ");
 					System.out.println("Calinski y Harabasz");
 					if (Double.isNaN(calinski)) {
-						System.out.println("No se puede calcular el índice, hay clústers vacíos");}
-						else {System.out.println(calinski);}
+						System.out.println("No se puede calcular el índice, hay clústers vacíos");
+					}
+					else {
+						System.out.println(calinski);
+					}
 					
 					mejor.calinski = calinski;//setear el valor del ínidice en el individuo
 					
@@ -566,10 +591,10 @@ public class ClusteringGenetico {
 					}
 					//Aumenta el ínidice de la población de mejores
 					m = m + 1;
-					
-					
-					
+											
 					System.out.println(" ");
+					
+					
 					System.out.println("Fitness:");
 					if (Double.isNaN(mejor.fitness)) {
 						System.out.println("No se puede calcular el fitness, hay clusters vacíos");
@@ -589,9 +614,7 @@ public class ClusteringGenetico {
 							}						
 						
 					}
-					System.out.println(" ");
-											
-					
+					System.out.println(" ");					
 					
 					/*System.out.println(" ");
 					System.out.println("Xu");
@@ -615,23 +638,285 @@ public class ClusteringGenetico {
 					
 				}
 				
-				int dimension1 = 1;//El usuario indica la dimensión 1 que desea graficar
-				int dimension2 = 2;//El usuario indica la dimensión 2 que desea graficar
+				
+				VentanaPrincipal.getTextArea1().append("MEJOR CONFIGURACIÓN: " + mejores.poblacion[mejorIndex].numClusters + " clusters." + newline);
+
+				if (Double.isNaN(mejores.poblacion[mejorIndex].calinski)) {
+					System.out.println("No se puede calcular el índice, hay clústers vacíos");
+					VentanaPrincipal.getTextArea1().append("No se puede calcular el índice, hay clústers vacíos." + newline);
+				}
+				else {
+					System.out.println(mejores.poblacion[mejorIndex].calinski);
+					VentanaPrincipal.getTextArea1().append("Índice Calinski y Harabasz: " + mejores.poblacion[mejorIndex].calinski + newline);
+
+				}
+				
+				System.out.println("Centroides:");
+				VentanaPrincipal.getTextArea1().append("Centroides" + newline);
+				for (int i = 0; i < mejores.poblacion[mejorIndex].numClusters; i++) {
+					double[] cent = new double [dim];
+					cent = mejores.poblacion[mejorIndex].centroides.get(i);
+					if (Double.isNaN(cent[0])) {
+						System.out.println(i + "- Cluster vacío");
+						VentanaPrincipal.getTextArea1().append(i + "- Cluster vacío." + newline);							
+						} else {
+							System.out.println(i + "- "+ Arrays.toString(cent));
+							VentanaPrincipal.getTextArea1().append(i + "- "+ Arrays.toString(cent) + newline);
+						}						
+					
+				}
+				System.out.println(" ");					
+				VentanaPrincipal.getTextArea1().append(newline);
+				
 				
 				//Grafica todos los mejores
-				/*for (int i = 0; i < mejores.poblacion.length; i++) {
-					PrepararGrafico (mejores.poblacion[i], 
-							mejores.poblacion[i].numClusters, dimension1, dimension2);	
-				}*/
+				for (int h = 0; h < mejores.poblacion.length; h++) {
+					if (h != mejorIndex ) {						
+						
+						VentanaPrincipal.getTextArea1().append("CONFIGURACIÓN: " + mejores.poblacion[h].numClusters + " clusters." + newline);
+
+						if (Double.isNaN(mejores.poblacion[h].calinski)) {
+							System.out.println("No se puede calcular el índice, hay clústers vacíos");
+							VentanaPrincipal.getTextArea1().append("No se puede calcular el índice, hay clústers vacíos." + newline);
+						}
+						else {
+							System.out.println(mejores.poblacion[h].calinski);
+							VentanaPrincipal.getTextArea1().append("Índice Calinski y Harabasz: " + mejores.poblacion[h].calinski + newline);
+
+						}
+						
+						System.out.println("Centroides:");
+						VentanaPrincipal.getTextArea1().append("Centroides" + newline);
+						for (int i = 0; i < mejores.poblacion[h].numClusters; i++) {
+							double[] cent = new double [dim];
+							cent = mejores.poblacion[h].centroides.get(i);
+							if (Double.isNaN(cent[0])) {
+								System.out.println(i + "- Cluster vacío");
+								VentanaPrincipal.getTextArea1().append(i + "- Cluster vacío." + newline);							
+								} else {
+									System.out.println(i + "- "+ Arrays.toString(cent));
+									VentanaPrincipal.getTextArea1().append(i + "- "+ Arrays.toString(cent) + newline);
+								}						
+							
+						}
+						System.out.println(" ");					
+						VentanaPrincipal.getTextArea1().append(newline);						
+						
+					}
+				}
+				
 				
 				//Grafica solo el mejor
-				PrepararGrafico (mejores.poblacion[mejorIndex], 
-								mejores.poblacion[mejorIndex].numClusters, (dimension1-1), (dimension2-1));
+				PrepararGrafico(mejores.poblacion[mejorIndex], 
+								mejores.poblacion[mejorIndex].numClusters, (dimensionX-1), (dimensionY-1));
 			}
-				break;
+			break;
 			
-			case 3:{}
-		}
+			case 3:				
+				
+			{	
+				int clusterInicial = (int)VentanaPrincipal.obtenerSpinnerCantidadClusters().getValue();
+				int cantidadIndividuos = (int)VentanaPrincipal.getSpinnerCantidadIndividuos().getValue();
+				int seleccionar = (int)VentanaPrincipal.getSpinnerPorcentajeSeleccion().getValue();//porcentaje de selección
+				int cruzar = (int)VentanaPrincipal.getSpinnerPorcentajeCruza().getValue();//Porcentaje de cruza
+				int mutar = (int)VentanaPrincipal.getSpinnerPorcentajeMutacion().getValue();//Porcentaje de mutación
+				int generaciones = (int)VentanaPrincipal.getSpinnerCantidadGeneraciones().getValue();
+				int clusterFinal = clusterInicial;
+				int diferencia = clusterFinal - clusterInicial;
+				Boolean BanderaCancelar = false; // bandera para cancelar
+				int z = 0; //indice del rango
+				int m = 0; //indice de la poblacion de mejores
+				double mejorCalinski = 0; //Para determinar la mejor clasificación de clusters
+				int mejorIndex = 0;
+				int dimensionX = (int)VentanaPrincipal.getSpinnerDimensionX().getValue();//El usuario indica la dimensión 1 que desea graficar
+				int dimensionY = (int)VentanaPrincipal.getSpinnerDimensionY().getValue();//El usuario indica la dimensión 2 que desea graficar
+				
+				//Crear población donde se gurdan los mejores de cada número de clusters
+				Poblacion mejores = new Poblacion(itemset, 0, diferencia+1, 
+					  		seleccionar, cruzar, mutar, 0, dim);
+				
+				while ((z < (diferencia+1)) && (BanderaCancelar == false)) {
+					
+					int clusters = clusterInicial + z;
+				
+					//Se genera la población inicial con centroides al azar del dataset
+					Poblacion population = new Poblacion (itemset, cantidadIndividuos, 
+						  	seleccionar, cruzar, mutar, clusters, dim);
+					
+					//Se calcula el fitness de toda la pobalción
+					population.calcFitness(0);
+					
+					//Se crea el individuo donde se elojará el mejor de la población
+					Individuo mejor = new Individuo(numTransactions, clusters, dim);
+					
+					//Auxiliar para dejar inalterados los seleccionados
+					int selec = (int)(cantidadIndividuos*seleccionar/100);
+					if (seleccionar == 100) {
+						selec = cantidadIndividuos-1;
+					}
+					
+					/* for (i = 0; i < population.poblacion.length; i++) {
+			        	
+			        	System.out.println((population.poblacion[i].fitness));	
+			        }*/					
+					
+					System.out.println("Cantidad de Clusters:" + clusterInicial);
+					System.out.println("Porcentaje de Selección:" + seleccionar);
+					System.out.println("Porcentaje de Cruza:" + cruzar);
+					System.out.println("Porcentaje de Mutación:" + mutar);
+					System.out.println("Cantidad de Individuos:" + cantidadIndividuos);
+					System.out.println("Cantidad de Generaciones:" + generaciones);
+					
+					//Inicia el AG
+					for (int i = 0; i<generaciones; i++) {
+									
+						Individuo mejorFitness = population.getBest();
+						
+						//Guarda el individuo con mejor fitness
+						if (( mejorFitness.fitness > mejor.fitness)){
+							
+							System.out.println(i);
+							mejor = mejorFitness;
+							System.out.println(mejor.fitness);
+							
+						}
+						
+						//System.out.println(mejorFitness.fitness);
+						//System.out.println(i);			
+						
+						//Crea la ruleta para la selección
+						population.naturalSelection();
+						
+						//Genera los individuos para la seguiente generación
+						//con un porcentaje de selección, cruza y mutación
+						population = population.generate();
+						
+						//Carga los centroides en los individuos nuevos mutados y cruzados
+						for (int j = selec; j < population.poblacion.length; j++) {
+							setearcentroides (dim, population.poblacion[j], itemset, clusters);
+						}
+						
+						population.calcFitness(selec);				
+					}
+					//Reacomoda puntos lejanos al mejor centroide
+					mejor = pasoFinal (mejor, clusters);
+					
+					//Calcula la media del dataset
+					double [] media;
+					media = calcMedia();
+					
+					//Calcula la distancia intercluster: Sum of Squared Between
+					double interClust;
+					interClust = SSB (mejor, clusters, media);
+					
+					//Calcula la distancia intracluster: Sum of Squared Within
+					double intraClust;
+					intraClust = mejor.SSW (mejor, clusters, itemset);
+						
+					//System.out.println("Distancia intercluster");
+					//System.out.println(interClust);
+					
+					//Calcula el índice Calinski y Harabasz
+					double calinski;
+					double numerador = interClust/(clusters-1);
+					double denominador1 = intraClust/(numTransactions-clusters);
+					calinski = numerador/denominador1;
+					System.out.println(" ");
+					
+					VentanaPrincipal.getTextArea1().append("VALORES DEL ALGORITMO DE CLUSTERING GENÉTICO" + newline);
+//					VentanaPrincipal.getTextArea1().append(newline);
+					System.out.println("Calinski y Harabasz");
+//					VentanaPrincipal.getTextArea1().append("Calinski y Harabasz" + newline);
+					if (Double.isNaN(calinski)) {
+						System.out.println("No se puede calcular el índice, hay clústers vacíos");
+//						VentanaPrincipal.getTextArea1().append("No se puede calcular el índice, hay clústers vacíos." + newline);
+					}
+					else {
+						System.out.println(calinski);
+//						VentanaPrincipal.getTextArea1().append("Índice Calinski y Harabasz: " + calinski + newline);
+					}
+					
+					mejor.calinski = calinski;//setear el valor del ínidice en el individuo
+					
+					//Agrega individuo a la población de mejores
+					mejores.poblacion[m] = mejor;
+					//Determina el mejor de todos
+					if (mejor.calinski > mejorCalinski) {
+						mejorIndex = m;
+						mejorCalinski = mejor.calinski;
+					}
+					//Aumenta el ínidice de la población de mejores
+					m = m + 1;
+										
+					System.out.println(" ");
+//					VentanaPrincipal.getTextArea1().append(newline);
+					
+
+					System.out.println("Fitness:");
+//					VentanaPrincipal.getTextArea1().append("Fitness." + newline);
+					
+					if (Double.isNaN(mejor.fitness)) {
+						System.out.println("No se puede calcular el fitness, hay clusters vacíos.");
+						VentanaPrincipal.getTextArea1().append("No se puede calcular el fitness, hay clusters vacíos." + newline);
+					} else {
+					System.out.println(mejor.fitness);
+					VentanaPrincipal.getTextArea1().append("Fitness: " + mejor.fitness + "." + newline);
+					}
+					
+					System.out.println("");
+					VentanaPrincipal.getTextArea1().append(newline);
+
+					
+					System.out.println("Centroides:");
+					VentanaPrincipal.getTextArea1().append("Centroides" + newline);
+					for (int i = 0; i < clusters; i++) {
+						double[] cent = new double [dim];
+						cent = mejor.centroides.get(i);
+						if (Double.isNaN(cent[0])) {
+							System.out.println(i + "- Cluster vacío");
+							VentanaPrincipal.getTextArea1().append(i + "- Cluster vacío." + newline);							
+							} else {
+								System.out.println(i + "- "+ Arrays.toString(cent));
+								VentanaPrincipal.getTextArea1().append(i + "- "+ Arrays.toString(cent) + newline);
+							}						
+						
+					}
+					System.out.println(" ");					
+					VentanaPrincipal.getTextArea1().append(newline);
+
+					
+					/*System.out.println(" ");
+					System.out.println("Xu");
+					double denominador = dim*Math.pow(numTransactions, 2.0);
+					double division = intraClust/denominador;
+					double Xu = dim * Math.log(Math.pow(division, 0.5)) + Math.log(clusters);
+					System.out.println(Xu);
+					
+					System.out.println(" ");
+					System.out.println("Mejor Individuo:");
+					System.out.println(Arrays.toString(mejor.genes));*/
+					
+					//PrepararGrafico (mejor, mejor.numClusters);
+					
+					z = z +1;
+					
+					//Tabla de puntos con sus cluster asociado
+					ArmarTabla(mejor);
+					
+					BanderaCancelar = (boolean)VentanaPrincipal.getBanderaCancelar(); // Condición para cancelar ejecución
+					
+				}
+				
+				PrepararGrafico(mejores.poblacion[mejorIndex], 
+							mejores.poblacion[mejorIndex].numClusters, (dimensionX-1), (dimensionY-1));
+				}	
+				
+				
+				Kmeans.ejecutar();
+				
+				break;		
+			
+		    }
 	
 		//hora de inicio de ejecucion del programa (en milisegundos)
 		long horaFinEjecucion = System.currentTimeMillis();
@@ -639,6 +924,12 @@ public class ClusteringGenetico {
 		//calculo el tiempo de ejecucion del programa (en segundos)
 		tiempoDeEjecucion= ((double)(horaFinEjecucion - horaInicioEjecucion)/1000);		
 	}
+	 
+	 static double trunc (double num) {
+		 double truncado;
+		 truncado=Math.floor(num*1000)/1000; 
+		 return truncado;
+	 }
 	 
 	public static double getTiempoDeEjecucion() {
 		return tiempoDeEjecucion;
