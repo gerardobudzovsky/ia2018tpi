@@ -223,7 +223,7 @@ public static void PrepararGrafico (IndividuoK ind, int clusters, int dimension1
 				VentanaPrincipal.getTextArea1().append("No se puede calcular el fitness, hay clusters vacíos." + newline);
 			} else {
 			System.out.println(IndividuoK.fitness);
-			VentanaPrincipal.getTextArea1().append("Fitness: " + IndividuoK.fitness + "." + newline);
+			VentanaPrincipal.getTextArea1().append("Fitness: " + trunc(IndividuoK.fitness) + "." + newline);
 			}		
 			
 			VentanaPrincipal.getTextArea1().append(newline);			
@@ -252,6 +252,7 @@ public static void PrepararGrafico (IndividuoK ind, int clusters, int dimension1
 				
 			Kmeans.armarTabla(IndividuoK);
 			mejorIndividuoCase3= IndividuoK;
+			
 			PrepararGrafico (IndividuoK, IndividuoK.numClusters, (dimension1-1), (dimension2-1));
 			
 			

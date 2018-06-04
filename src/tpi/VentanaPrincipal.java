@@ -42,7 +42,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 	static private final String newline = "\n";
 	private JLabel lblLogo;
 	private JButton botonEjecutar;
-	private JButton botonCancelar;
+//	private JButton botonCancelar;
+	private JLabel lblArchivoSubido;
 	private JButton btnMostrarGraficoGenetico;
     private JButton btnMostrarGraficoKMeans;
 	private static JTextArea textArea1;
@@ -77,7 +78,13 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
     private static JSpinner spinnerDimensionY;
     private static ScatterPlotExample grafico1;
     private static ScatterPlotExample grafico2;
-    private JButton btnMostrarCentroides;
+	private static VentanaCentroidesCase1 ventanaCentroidesCase1;
+    private static VentanaCentroidesCase2 ventanaCentroidesCase2;   
+    private static VentanaCentroidesCase3 ventanaCentroidesCase3;
+    private static VentanaClustersAsociadosCase1y2 ventanaClustersAsociadosCase1y2;
+    private static VentanaClustersAsociadosCase3 ventanaClustersAsociadosCase3;
+
+	private JButton btnMostrarCentroides;
     private JButton btnMostrarClusters;
 
 	/**
@@ -116,39 +123,31 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 		botonEjecutar.setBounds(15, 553, 89, 23);
 		botonEjecutar.addActionListener(this);
 		contentPane.add(botonEjecutar);
-		botonEjecutar.setVisible(false);
 		
 		btnMostrarGraficoGenetico = new JButton("Gráfico");
 		btnMostrarGraficoGenetico.setBounds(227, 553, 141, 23);
 		btnMostrarGraficoGenetico.addActionListener(this);
 		contentPane.add(btnMostrarGraficoGenetico);
-		btnMostrarGraficoGenetico.setEnabled(false);
-		btnMostrarGraficoGenetico.setVisible(false);
 		
 		btnMostrarGraficoKMeans = new JButton("Gráfico K-Means");
 		btnMostrarGraficoKMeans.setBounds(388, 553, 141, 23);
 		btnMostrarGraficoKMeans.addActionListener(this);
 		contentPane.add(btnMostrarGraficoKMeans);
-		btnMostrarGraficoKMeans.setEnabled(false);
-		btnMostrarGraficoKMeans.setVisible(false);
 		
 		btnMostrarCentroides = new JButton("Centroides");
 		btnMostrarCentroides.setBounds(539, 553, 102, 23);
 		btnMostrarCentroides.addActionListener(this);
 		contentPane.add(btnMostrarCentroides);
-//		btnMostrarGraficoKMeans.setEnabled(false);
-//		btnMostrarGraficoKMeans.setVisible(false);
 		
 		btnMostrarClusters = new JButton("Clusters");
 		btnMostrarClusters.setBounds(651, 553, 89, 23);
 		btnMostrarClusters.addActionListener(this);
 		contentPane.add(btnMostrarClusters);
 		
-		botonCancelar = new JButton("Cancelar");
-		botonCancelar.setBounds(123, 553, 89, 23);
-		botonCancelar.addActionListener(this);
-		contentPane.add(botonCancelar);
-		botonCancelar.setVisible(false);
+//		botonCancelar = new JButton("Cancelar");
+//		botonCancelar.setBounds(123, 553, 89, 23);
+//		botonCancelar.addActionListener(this);
+//		contentPane.add(botonCancelar);
 		
  		textArea1=new JTextArea();
  		textArea1.setEditable(false);
@@ -160,28 +159,20 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 		labelCantidadClusters = new JLabel("labelCantidadClusters");
 		labelCantidadClusters.setBounds(15, 278, 141, 14);
 		contentPane.add(labelCantidadClusters);
-		labelCantidadClusters.setEnabled(false);
-		labelCantidadClusters.setVisible(false);
 		
 		spinnerCantidadClusters = new JSpinner();
 		spinnerCantidadClusters.setBounds(220, 273, 39, 23);
 		spinnerCantidadClusters.setModel(new SpinnerNumberModel(2,2,100,1));
 		contentPane.add(spinnerCantidadClusters);
-		spinnerCantidadClusters.setVisible(false);
-		spinnerCantidadClusters.setEnabled(false);
 		
 		lblClusterFinal = new JLabel("Cluster Final:");
 		lblClusterFinal.setBounds(15, 308, 102, 14);
 		contentPane.add(lblClusterFinal);
-		lblClusterFinal.setEnabled(false);
-		lblClusterFinal.setVisible(false);
 		
 		spinnerClusterFinal = new JSpinner();
 		spinnerClusterFinal.setBounds(220, 305, 39, 20);
 		spinnerClusterFinal.setModel(new SpinnerNumberModel(3,3,100,1));
 		contentPane.add(spinnerClusterFinal);
-		spinnerClusterFinal.setEnabled(false);
-		spinnerClusterFinal.setVisible(false);
 		
 		fc = new JFileChooser("C:\\");
 		
@@ -189,7 +180,11 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 		botonSeleccionarArchivo.setBounds(15, 239, 153, 23);
 		botonSeleccionarArchivo.addActionListener(this);
 		contentPane.add(botonSeleccionarArchivo);
-		botonSeleccionarArchivo.setVisible(false);		
+		
+        lblArchivoSubido = new JLabel("");
+		lblArchivoSubido.setBounds(180, 242, 108, 16);
+		contentPane.add(lblArchivoSubido);
+        contentPane.add(botonSeleccionarArchivo);
 		
 		bg=new ButtonGroup();
 		
@@ -218,87 +213,69 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 		lblPorcentajeSeleccion.setBounds(15, 338, 173, 14);
 		lblPorcentajeSeleccion.setToolTipText("Define el porcentaje que se va a seleccionar del dataset por selección elitista.");
 		contentPane.add(lblPorcentajeSeleccion);
-		lblPorcentajeSeleccion.setVisible(false);
 		
 		lblPorcentajeCruza = new JLabel("Porcentaje de Cruza");
 		lblPorcentajeCruza.setBounds(15, 362, 153, 14);
 		lblPorcentajeCruza.setToolTipText("Define el porcentaje que se va a cruzar del dataset por cruza simple.");
 		contentPane.add(lblPorcentajeSeleccion);
 		contentPane.add(lblPorcentajeCruza);
-		lblPorcentajeCruza.setVisible(false);
 		
 		lblPorcentajeMutacion = new JLabel("Porcentaje de Mutación");
 		lblPorcentajeMutacion.setBounds(15, 392, 173, 14);
 		lblPorcentajeMutacion.setToolTipText("Define el porcentaje que se va a mutar del dataset por mutación simple.");
 		contentPane.add(lblPorcentajeMutacion);
-		lblPorcentajeMutacion.setVisible(false);
 		
 		spinnerPorcentajeSeleccion = new JSpinner();
 		spinnerPorcentajeSeleccion.setBounds(220, 333, 39, 23);
 		spinnerPorcentajeSeleccion.setModel(new SpinnerNumberModel(10,1,100,1));
 		spinnerPorcentajeSeleccion.setToolTipText("Define el porcentaje que se va a seleccionar del dataset por selección elitista.");
 		contentPane.add(spinnerPorcentajeSeleccion);
-		spinnerPorcentajeSeleccion.setVisible(false);
 		
 		spinnerPorcentajeCruza = new JSpinner();
 		spinnerPorcentajeCruza.setBounds(220, 357, 39, 23);
 		spinnerPorcentajeCruza.setModel(new SpinnerNumberModel(85,1,100,1));
 		spinnerPorcentajeCruza.setToolTipText("Define el porcentaje que se va a cruzar del dataset por cruza simple.");
 		contentPane.add(spinnerPorcentajeCruza);
-		spinnerPorcentajeCruza.setVisible(false);
 		
 		spinnerPorcentajeMutacion = new JSpinner();
 		spinnerPorcentajeMutacion.setBounds(220, 387, 39, 23);
 		spinnerPorcentajeMutacion.setModel(new SpinnerNumberModel(5,1,100,1));
 		spinnerPorcentajeMutacion.setToolTipText("Define el porcentaje que se va a mutar del dataset por mutación simple.");
 		contentPane.add(spinnerPorcentajeMutacion);
-		spinnerPorcentajeMutacion.setVisible(false);
 		
 		lblCantidadIndividuos = new JLabel("Cantidad de Individuos:");
 		lblCantidadIndividuos.setBounds(15, 422, 173, 14);
 		contentPane.add(lblCantidadIndividuos);
-		lblCantidadIndividuos.setVisible(false);		
 		
 		lblCantidadGeneraciones = new JLabel("Cantidad de Generaciones:");
 		lblCantidadGeneraciones.setBounds(15, 449, 173, 14);
 		contentPane.add(lblCantidadGeneraciones);
-		lblCantidadGeneraciones.setVisible(false);
 		
 		spinnerCantidadIndividuos = new JSpinner();
 		spinnerCantidadIndividuos.setBounds(220, 417, 47, 23);
 		spinnerCantidadIndividuos.setModel(new SpinnerNumberModel(100,2,10000,1));
 		contentPane.add(spinnerCantidadIndividuos);
-		spinnerCantidadIndividuos.setVisible(false);
 		
 		spinnerCantidadGeneraciones = new JSpinner();
 		spinnerCantidadGeneraciones.setBounds(219, 444, 47, 23);
 		spinnerCantidadGeneraciones.setModel(new SpinnerNumberModel(100,2,10000,1));
 		contentPane.add(spinnerCantidadGeneraciones);
-		spinnerCantidadGeneraciones.setVisible(false);
 		
 		lblDimensionX = new JLabel("Dimensi\u00F3n X: ");
 		lblDimensionX.setBounds(15, 479, 102, 14);
 		contentPane.add(lblDimensionX);
-		lblDimensionX.setEnabled(false);
-		lblDimensionX.setVisible(false);
 		
 		lblDimensionY = new JLabel("Dimensi\u00F3n Y: ");
 		lblDimensionY.setBounds(15, 509, 102, 14);
 		contentPane.add(lblDimensionY);
-		lblDimensionY.setEnabled(false);
-		lblDimensionY.setVisible(false);
 		
 		spinnerDimensionX = new JSpinner();
 		spinnerDimensionX.setBounds(220, 476, 39, 20);
 		contentPane.add(spinnerDimensionX);
-		spinnerDimensionX.setEnabled(false);
-		spinnerDimensionX.setVisible(false);
 		
 		spinnerDimensionY = new JSpinner();
 		spinnerDimensionY.setBounds(220, 506, 40, 20);
 		contentPane.add(spinnerDimensionY);
-		spinnerDimensionY.setEnabled(false);
-		spinnerDimensionY.setVisible(false);
 		
 		//Read the picture as a BufferedImage
 		BufferedImage img = null;
@@ -329,107 +306,32 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 		
         if (rdbtnClusteringGenetico.isSelected()) {    	
         	VentanaPrincipal.menu= 1;
-        	botonEjecutar.setVisible(true);
-        	botonCancelar.setVisible(true);      
-        	botonSeleccionarArchivo.setVisible(true);
     		btnMostrarGraficoGenetico.setText("Gráfico");
-    		btnMostrarGraficoGenetico.setVisible(true);
-    		btnMostrarGraficoKMeans.setEnabled(false);
-    		btnMostrarGraficoKMeans.setVisible(false);
+
         	labelCantidadClusters.setText("Cantidad de Clusters:");
         	labelCantidadClusters.setToolTipText("Define la cantidad de clústers en las que se quiere dividir el dataset.");
-        	labelCantidadClusters.setEnabled(false);
-        	labelCantidadClusters.setVisible(true);
     		spinnerCantidadClusters.setToolTipText("Define la cantidad de clústers en las que se quiere dividir el dataset.");
-        	spinnerCantidadClusters.setVisible(true);
-        	lblClusterFinal.setEnabled(false);
-        	lblClusterFinal.setVisible(true);
-    		spinnerClusterFinal.setEnabled(false);
-    		spinnerClusterFinal.setVisible(true);
-        	lblPorcentajeSeleccion.setVisible(true);
-        	lblPorcentajeCruza.setVisible(true);
-        	lblPorcentajeMutacion.setVisible(true);
-        	spinnerPorcentajeSeleccion.setVisible(true);
-        	spinnerPorcentajeCruza.setVisible(true);
-        	spinnerPorcentajeMutacion.setVisible(true);
-    		lblCantidadIndividuos.setVisible(true);
-    		lblCantidadGeneraciones.setVisible(true);
-    		spinnerCantidadIndividuos.setVisible(true);
-    		spinnerCantidadGeneraciones.setVisible(true);
-    		lblDimensionX.setVisible(true);
-    		lblDimensionY.setVisible(true);
-    		spinnerDimensionX.setVisible(true);
-    		spinnerDimensionY.setVisible(true);
         }
         if (rdbtnClusteringGeneticoPor.isSelected()) {
         	VentanaPrincipal.menu= 2;
-        	botonEjecutar.setVisible(true);
-        	botonCancelar.setVisible(true);
-        	botonSeleccionarArchivo.setVisible(true);
+
     		btnMostrarGraficoGenetico.setText("Gráfico");
-    		btnMostrarGraficoGenetico.setVisible(true);
-    		btnMostrarGraficoKMeans.setEnabled(false);
-    		btnMostrarGraficoKMeans.setVisible(false);
         	labelCantidadClusters.setText("Cluster Inicial:");
         	labelCantidadClusters.setToolTipText("Define la mínima cantidad de clusters a evaluar");
-        	labelCantidadClusters.setEnabled(false);
-        	labelCantidadClusters.setVisible(true);
         	spinnerCantidadClusters.setToolTipText("Define la mínima cantidad de clusters a evaluar");
-        	spinnerCantidadClusters.setEnabled(false);
-        	spinnerCantidadClusters.setVisible(true);
         	lblClusterFinal.setToolTipText("Define la máxima cantidad de clusters a evaluar");
-        	lblClusterFinal.setEnabled(true);
-        	lblClusterFinal.setVisible(true);
         	spinnerClusterFinal.setToolTipText("Define la máxima cantidad de clusters a evaluar");
-    		spinnerClusterFinal.setEnabled(true);
-    		spinnerClusterFinal.setVisible(true);
-        	lblPorcentajeSeleccion.setVisible(true);
-        	lblPorcentajeCruza.setVisible(true);
-        	lblPorcentajeMutacion.setVisible(true);
-        	spinnerPorcentajeSeleccion.setVisible(true);
-        	spinnerPorcentajeCruza.setVisible(true);
-        	spinnerPorcentajeMutacion.setVisible(true);
-    		lblCantidadIndividuos.setVisible(true);
-    		lblCantidadGeneraciones.setVisible(true);
-    		spinnerCantidadIndividuos.setVisible(true);
-    		spinnerCantidadGeneraciones.setVisible(true);
-    		lblDimensionX.setVisible(true);
-    		lblDimensionY.setVisible(true);
-    		spinnerDimensionX.setVisible(true);
-    		spinnerDimensionY.setVisible(true);
         }
         if (rdbtnComparacinConKmeans.isSelected()) {
         	VentanaPrincipal.menu= 3;
-        	botonEjecutar.setVisible(true);
-        	botonCancelar.setVisible(true);
+
         	btnMostrarGraficoGenetico.setText("Gráfico Genético");
-    		btnMostrarGraficoGenetico.setVisible(true);
+
     		btnMostrarGraficoKMeans.setText("Gráfico K-Means");
-    		btnMostrarGraficoKMeans.setVisible(true);
-        	botonSeleccionarArchivo.setVisible(true);
         	labelCantidadClusters.setText("Cantidad de Clusters:");
         	labelCantidadClusters.setToolTipText("Define la cantidad de clústers en las que se quiere dividir el dataset.");
-        	labelCantidadClusters.setVisible(true);
     		spinnerCantidadClusters.setToolTipText("Define la cantidad de clústers en las que se quiere dividir el dataset.");
-        	spinnerCantidadClusters.setVisible(true);
-        	lblClusterFinal.setEnabled(false);
-        	lblClusterFinal.setVisible(true);
-    		spinnerClusterFinal.setEnabled(false);
-    		spinnerClusterFinal.setVisible(true);
-        	lblPorcentajeSeleccion.setVisible(true);
-        	lblPorcentajeCruza.setVisible(true);
-        	lblPorcentajeMutacion.setVisible(true);
-        	spinnerPorcentajeSeleccion.setVisible(true);
-        	spinnerPorcentajeCruza.setVisible(true);
-        	spinnerPorcentajeMutacion.setVisible(true);
-    		lblCantidadIndividuos.setVisible(true);
-    		lblCantidadGeneraciones.setVisible(true);
-    		spinnerCantidadIndividuos.setVisible(true);
-    		spinnerCantidadGeneraciones.setVisible(true);
-    		lblDimensionX.setVisible(true);
-    		lblDimensionY.setVisible(true);
-    		spinnerDimensionX.setVisible(true);
-    		spinnerDimensionY.setVisible(true);
+
         } 
 		
 	}
@@ -444,28 +346,21 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                file = fc.getSelectedFile();               
                //This is where a real application would open the file.
-               textArea1.append("Seleccionado el archivo " + file.getName() + "." + newline);
-               //lblArchivoSubido.setText(file.getName());
+               lblArchivoSubido.setText(file.getName());
                
                try {
             	   
             	int cantidadTransaccionesMenosUno= this.obtenerNumeroDeTransacciones() - 1;            	
             	spinnerCantidadClusters.setModel(new SpinnerNumberModel(2,2,cantidadTransaccionesMenosUno,1));
-            	spinnerCantidadClusters.setEnabled(true);
             	spinnerClusterFinal.setModel(new SpinnerNumberModel(3,3,cantidadTransaccionesMenosUno,1));
-				spinnerClusterFinal.setEnabled(true);
 
 				int nroDimensiones= this.obtenerNumeroDeDimensiones();
 				lblDimensionX.setToolTipText("Define una dimensión a graficar del dataset entre 1 y "+nroDimensiones);
-				lblDimensionX.setEnabled(true);
 				spinnerDimensionX.setModel(new SpinnerNumberModel(1,1,nroDimensiones,1));
 				spinnerDimensionX.setToolTipText("Define una dimensión a graficar del dataset entre 1 y "+nroDimensiones);
-				spinnerDimensionX.setEnabled(true);
 				lblDimensionY.setToolTipText("Define una dimensión a graficar del dataset entre 1 y "+nroDimensiones);
-				lblDimensionY.setEnabled(true);
 				spinnerDimensionY.setModel(new SpinnerNumberModel(2,1,nroDimensiones,1));
 				spinnerDimensionY.setToolTipText("Define una dimensión a graficar del dataset entre 1 y "+nroDimensiones);
-				spinnerDimensionY.setEnabled(true);
 	            textArea1.append("El dataset tiene " + nroDimensiones + " dimensiones." + newline);
 	            textArea1.append(newline);
 				
@@ -507,11 +402,11 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 			
 			try {
 				if (existeError == false) {					
-					VentanaPrincipal.textArea1.setText("");					
+					VentanaPrincipal.textArea1.setText("");
+		            textArea1.append("El dataset tiene " + this.obtenerNumeroDeDimensiones() + " dimensiones." + newline);
+		            textArea1.append(newline);
 					ClusteringGenetico.ejecutar();
 					VentanaPrincipal.textArea1.append("El tiempo de ejecución del programa fue de " + ClusteringGenetico.tiempoDeEjecucion + " segundos.");
-					this.btnMostrarGraficoGenetico.setEnabled(true);
-					this.btnMostrarGraficoKMeans.setEnabled(true);
 					JOptionPane.showMessageDialog(null, "El programa se ejecutó con éxito " + ClusteringGenetico.tiempoDeEjecucion + " segundos.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				}				
 			} catch (Exception e) {
@@ -524,55 +419,71 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 			if (VentanaPrincipal.menu == 3) {				
 				if (evento.getSource() == btnMostrarGraficoGenetico) {					
 					if (VentanaPrincipal.grafico1.isVisible() == false) {
+						this.btnMostrarGraficoGenetico.setText("Gráfico genético");
 						VentanaPrincipal.grafico1.setVisible(true);
-						this.btnMostrarGraficoGenetico.setText("Ocultar gráf. genético");
 					}
 					else {
+						this.btnMostrarGraficoGenetico.setText("Gráfico genético");
 						VentanaPrincipal.grafico1.setVisible(false);
-						this.btnMostrarGraficoGenetico.setText("Gráfico genético");				
 					}		
 				}
 				
 			}
 			else {				
 				if (VentanaPrincipal.grafico1.isVisible() == false) {
+					this.btnMostrarGraficoGenetico.setText("Gráfico");
 					VentanaPrincipal.grafico1.setVisible(true);
-					this.btnMostrarGraficoGenetico.setText("Ocultar Gráfico");
 				}
 				else {
+					this.btnMostrarGraficoGenetico.setText("Gráfico");
 					VentanaPrincipal.grafico1.setVisible(false);
-					this.btnMostrarGraficoGenetico.setText("Gráfico");				
 				}				
 			}			
 		}		
 			
 		if (evento.getSource() == btnMostrarGraficoKMeans) {
 			if (VentanaPrincipal.grafico2.isVisible() == false) {
+				this.btnMostrarGraficoKMeans.setText("Gráfico K-Means");
 				VentanaPrincipal.grafico2.setVisible(true);
-				this.btnMostrarGraficoKMeans.setText("Ocultar gráf. K-Means");
 			}
 			else {
+				this.btnMostrarGraficoKMeans.setText("Gráfico K-Means");
 				VentanaPrincipal.grafico2.setVisible(false);
-				this.btnMostrarGraficoKMeans.setText("Gráfico K-Means");				
+
 			}		
 		}
 		
-		if (evento.getSource() == botonCancelar) {			
-			VentanaPrincipal.banderaCancelar= true;
-			JOptionPane.showMessageDialog(null, "Ejecución Cancelada", "Aviso", JOptionPane.INFORMATION_MESSAGE);
-		}
+//		if (evento.getSource() == botonCancelar) {			
+//			VentanaPrincipal.banderaCancelar= true;
+//			JOptionPane.showMessageDialog(null, "Ejecución Cancelada", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+//		}
 		
         if (evento.getSource() == btnMostrarCentroides) {
             try{
             	if (VentanaPrincipal.menu == 1) {
-            		new VentanaCentroidesCase1(); 
+        			if (VentanaPrincipal.ventanaCentroidesCase1.isVisible() == false) {
+        				VentanaPrincipal.ventanaCentroidesCase1.setVisible(true);
+        			}
+        			else {
+        				VentanaPrincipal.ventanaCentroidesCase1.setVisible(false);
+        			}
             	}
             	else { 
             		if (VentanaPrincipal.menu == 2) {
-            			new VentanaCentroidesCase2();
+            			if (VentanaPrincipal.ventanaCentroidesCase2.isVisible() == false) {
+            				VentanaPrincipal.ventanaCentroidesCase2.setVisible(true);
+            			}
+            			else {
+            				VentanaPrincipal.ventanaCentroidesCase2.setVisible(false);
+            			}
             		}
             		else {
-            			new VentanaCentroidesCase3();
+            			if (VentanaPrincipal.ventanaCentroidesCase3.isVisible() == false) {
+            				VentanaPrincipal.ventanaCentroidesCase3.setVisible(true);
+            			}
+            			else {
+            				VentanaPrincipal.ventanaCentroidesCase3.setVisible(false);
+            			}
             		}
             	}
             
@@ -582,7 +493,30 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
         }
         
         if(evento.getSource() == btnMostrarClusters) {
-        	new VentanaClustersAsociados();
+            try{
+                if (menu == 3) {
+
+        			if (VentanaPrincipal.ventanaClustersAsociadosCase3.isVisible() == false) {
+        				VentanaPrincipal.ventanaClustersAsociadosCase3.setVisible(true);
+        			}
+        			else {
+        				VentanaPrincipal.ventanaClustersAsociadosCase3.setVisible(false);
+        			}
+                	
+				} else {
+					
+        			if (VentanaPrincipal.ventanaClustersAsociadosCase1y2.isVisible() == false) {
+        				VentanaPrincipal.ventanaClustersAsociadosCase1y2.setVisible(true);
+        			}
+        			else {
+        				VentanaPrincipal.ventanaClustersAsociadosCase1y2.setVisible(false);
+        			}
+					
+				}
+            	            
+            }catch(Exception ex){
+                ex.printStackTrace();
+            }
         }
 		
 	}
@@ -744,5 +678,45 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 
 	public static void setGrafico2(ScatterPlotExample grafico2) {
 		VentanaPrincipal.grafico2 = grafico2;
+	}
+	
+    public static VentanaCentroidesCase1 getVentanaCentroidesCase1() {
+		return ventanaCentroidesCase1;
+	}
+
+	public static void setVentanaCentroidesCase1(VentanaCentroidesCase1 ventanaCentroidesCase1) {
+		VentanaPrincipal.ventanaCentroidesCase1 = ventanaCentroidesCase1;
+	}
+
+	public static VentanaCentroidesCase2 getVentanaCentroidesCase2() {
+		return ventanaCentroidesCase2;
+	}
+
+	public static void setVentanaCentroidesCase2(VentanaCentroidesCase2 ventanaCentroidesCase2) {
+		VentanaPrincipal.ventanaCentroidesCase2 = ventanaCentroidesCase2;
+	}
+
+	public static VentanaCentroidesCase3 getVentanaCentroidesCase3() {
+		return ventanaCentroidesCase3;
+	}
+
+	public static void setVentanaCentroidesCase3(VentanaCentroidesCase3 ventanaCentroidesCase3) {
+		VentanaPrincipal.ventanaCentroidesCase3 = ventanaCentroidesCase3;
+	}
+
+	public static VentanaClustersAsociadosCase1y2 getVentanaClustersAsociadosCase1y2() {
+		return ventanaClustersAsociadosCase1y2;
+	}
+
+	public static void setVentanaClustersAsociadosCase1y2(VentanaClustersAsociadosCase1y2 ventanaClustersAsociadosCase1y2) {
+		VentanaPrincipal.ventanaClustersAsociadosCase1y2 = ventanaClustersAsociadosCase1y2;
+	}
+	
+    public static VentanaClustersAsociadosCase3 getVentanaClustersAsociadosCase3() {
+		return ventanaClustersAsociadosCase3;
+	}
+
+	public static void setVentanaClustersAsociadosCase3(VentanaClustersAsociadosCase3 ventanaClustersAsociadosCase3) {
+		VentanaPrincipal.ventanaClustersAsociadosCase3 = ventanaClustersAsociadosCase3;
 	}
 }

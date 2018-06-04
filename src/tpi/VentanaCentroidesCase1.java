@@ -136,7 +136,7 @@ public class VentanaCentroidesCase1 extends JDialog implements ChangeListener{
             	scrollPane.setViewportView(table1);
         		lblNewLabel.setText("<html>"
         				+ "<p><i>Índice Calinski y Harabasz: </i>"+ ClusteringGenetico.mejorIndividuoCase1.calinski + "</p>"
-        				+ "<p>Fitness :" + ClusteringGenetico.mejorIndividuoCase1.fitness + "</p>"
+        				+ "<p>Fitness :" + trunc(ClusteringGenetico.mejorIndividuoCase1.fitness) + "</p>"
         				+ "</html>");			
             }
             if (rdbtnConfiable.isSelected()) {
@@ -152,4 +152,10 @@ public class VentanaCentroidesCase1 extends JDialog implements ChangeListener{
 		lblNewLabel.setText("<html>Una regla no confiable presenta una relacion muy debil (menor al 50%) de probabilidad de que un cliente que adquiera los items de la premisa, tambien adquiera los del consecuente</html>");
             }		
         }
+	
+	 static double trunc (double num) {
+		 double truncado;
+		 truncado=Math.floor(num*1000)/1000; 
+		 return truncado;
+	 }
 }

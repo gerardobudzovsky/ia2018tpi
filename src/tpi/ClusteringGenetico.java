@@ -339,7 +339,7 @@ public class ClusteringGenetico {
 						}
 						
 						//System.out.println(mejorFitness.fitness);
-						//System.out.println(i);			
+						System.out.println(i);			
 						
 						//Crea la ruleta para la selección
 						population.naturalSelection();
@@ -387,7 +387,7 @@ public class ClusteringGenetico {
 					}
 					else {
 						System.out.println(calinski);
-						VentanaPrincipal.getTextArea1().append("Índice Calinski y Harabasz: " + calinski + newline);
+						VentanaPrincipal.getTextArea1().append("Índice Calinski y Harabasz: " + trunc(calinski)  + newline);
 
 					}
 					
@@ -415,7 +415,7 @@ public class ClusteringGenetico {
 						VentanaPrincipal.getTextArea1().append("No se puede calcular el fitness, hay clusters vacíos." + newline);
 					} else {
 					System.out.println(mejor.fitness);
-					VentanaPrincipal.getTextArea1().append("Fitness: " + mejor.fitness + "." + newline);
+					VentanaPrincipal.getTextArea1().append("Fitness: " + trunc(mejor.fitness) + "." + newline);
 					}
 					
 					System.out.println("");
@@ -461,6 +461,16 @@ public class ClusteringGenetico {
 					BanderaCancelar = (boolean)VentanaPrincipal.getBanderaCancelar(); // Condición para cancelar ejecución
 					
 				}
+				
+				VentanaCentroidesCase1 ventanaCentroidesCase1 = new VentanaCentroidesCase1();
+				VentanaPrincipal.setVentanaCentroidesCase1(ventanaCentroidesCase1);
+				VentanaPrincipal.getVentanaCentroidesCase1().setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+				VentanaPrincipal.getVentanaCentroidesCase1().setVisible(false);
+				
+				VentanaClustersAsociadosCase1y2 ventanaClustersAsociadosCase1y2 = new VentanaClustersAsociadosCase1y2();
+				VentanaPrincipal.setVentanaClustersAsociadosCase1y2(ventanaClustersAsociadosCase1y2);
+				VentanaPrincipal.getVentanaClustersAsociadosCase1y2().setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+				VentanaPrincipal.getVentanaClustersAsociadosCase1y2().setVisible(false);
 				
 				PrepararGrafico(mejores.poblacion[mejorIndex], 
 							mejores.poblacion[mejorIndex].numClusters, (dimensionX-1), (dimensionY-1));
@@ -653,7 +663,7 @@ public class ClusteringGenetico {
 				}
 				else {
 					System.out.println(mejores.poblacion[mejorIndex].calinski);
-					VentanaPrincipal.getTextArea1().append("Índice Calinski y Harabasz: " + mejores.poblacion[mejorIndex].calinski + newline);
+					VentanaPrincipal.getTextArea1().append("Índice Calinski y Harabasz: " + trunc(mejores.poblacion[mejorIndex].calinski) + newline);
 
 				}
 				
@@ -687,7 +697,7 @@ public class ClusteringGenetico {
 						}
 						else {
 							System.out.println(mejores.poblacion[h].calinski);
-							VentanaPrincipal.getTextArea1().append("Índice Calinski y Harabasz: " + mejores.poblacion[h].calinski + newline);
+							VentanaPrincipal.getTextArea1().append("Índice Calinski y Harabasz: " + trunc(mejores.poblacion[h].calinski) + newline);
 
 						}
 						
@@ -713,6 +723,16 @@ public class ClusteringGenetico {
 				
 				
 				mejorIndividuoCase2= mejores.poblacion[mejorIndex];
+				
+				VentanaCentroidesCase2 ventanaCentroidesCase2 = new VentanaCentroidesCase2();
+				VentanaPrincipal.setVentanaCentroidesCase2(ventanaCentroidesCase2);
+				VentanaPrincipal.getVentanaCentroidesCase2().setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+				VentanaPrincipal.getVentanaCentroidesCase2().setVisible(false);
+				
+				VentanaClustersAsociadosCase1y2 ventanaClustersAsociadosCase1y2 = new VentanaClustersAsociadosCase1y2();
+				VentanaPrincipal.setVentanaClustersAsociadosCase1y2(ventanaClustersAsociadosCase1y2);
+				VentanaPrincipal.getVentanaClustersAsociadosCase1y2().setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+				VentanaPrincipal.getVentanaClustersAsociadosCase1y2().setVisible(false);
 				
 				//Grafica solo el mejor
 				PrepararGrafico(mejores.poblacion[mejorIndex], 
@@ -869,7 +889,7 @@ public class ClusteringGenetico {
 						VentanaPrincipal.getTextArea1().append("No se puede calcular el fitness, hay clusters vacíos." + newline);
 					} else {
 					System.out.println(mejor.fitness);
-					VentanaPrincipal.getTextArea1().append("Fitness: " + mejor.fitness + "." + newline);
+					VentanaPrincipal.getTextArea1().append("Fitness: " + trunc(mejor.fitness) + "." + newline);
 					}
 					
 					System.out.println("");
@@ -922,6 +942,16 @@ public class ClusteringGenetico {
 				
 				
 				Kmeans.ejecutar();
+				
+				VentanaCentroidesCase3 ventanaCentroidesCase3 = new VentanaCentroidesCase3();
+				VentanaPrincipal.setVentanaCentroidesCase3(ventanaCentroidesCase3);
+				VentanaPrincipal.getVentanaCentroidesCase3().setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+				VentanaPrincipal.getVentanaCentroidesCase3().setVisible(false);
+				
+				VentanaClustersAsociadosCase3 ventanaClustersAsociadosCase3 = new VentanaClustersAsociadosCase3();
+				VentanaPrincipal.setVentanaClustersAsociadosCase3(ventanaClustersAsociadosCase3);
+				VentanaPrincipal.getVentanaClustersAsociadosCase3().setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+				VentanaPrincipal.getVentanaClustersAsociadosCase3().setVisible(false);
 				
 				break;		
 			
