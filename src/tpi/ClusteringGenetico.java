@@ -24,6 +24,10 @@ public class ClusteringGenetico {
 	static int numTransactions = 0;
 	static double MAX = 1.7E300;
 	static double tiempoDeEjecucion = 0;
+	static Individuo mejorIndividuoCase1;
+	static Individuo mejorIndividuoCase2;
+	static Individuo mejorIndividuoCase3;
+	static ArrayList<double[]> puntosAsociados;
 
 	//Imprime los puntos con sus clusters asociados
 	static void ArmarTabla(Individuo mejor){
@@ -45,6 +49,7 @@ public class ClusteringGenetico {
 			
 			arreglo = salida.get(i);
 			System.out.println(Arrays.toString(arreglo));
+			puntosAsociados= salida;
 		}
 	}
 	
@@ -397,6 +402,7 @@ public class ClusteringGenetico {
 					}
 					//Aumenta el ínidice de la población de mejores
 					m = m + 1;
+					mejorIndividuoCase1= mejor;
 										
 					System.out.println(" ");
 					VentanaPrincipal.getTextArea1().append(newline);
@@ -461,7 +467,7 @@ public class ClusteringGenetico {
 				}
 				break;
 			
-			case 2://rango
+			case 2://RANGO
 			{	
 				int clusterInicial = (int)VentanaPrincipal.obtenerSpinnerCantidadClusters().getValue();
 				int cantidadIndividuos = (int)VentanaPrincipal.getSpinnerCantidadIndividuos().getValue();
@@ -706,6 +712,8 @@ public class ClusteringGenetico {
 				}
 				
 				
+				mejorIndividuoCase2= mejores.poblacion[mejorIndex];
+				
 				//Grafica solo el mejor
 				PrepararGrafico(mejores.poblacion[mejorIndex], 
 								mejores.poblacion[mejorIndex].numClusters, (dimensionX-1), (dimensionY-1));
@@ -847,6 +855,7 @@ public class ClusteringGenetico {
 					}
 					//Aumenta el ínidice de la población de mejores
 					m = m + 1;
+					mejorIndividuoCase3= mejor;
 										
 					System.out.println(" ");
 //					VentanaPrincipal.getTextArea1().append(newline);

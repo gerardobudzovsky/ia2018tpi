@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -76,6 +77,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
     private static JSpinner spinnerDimensionY;
     private static ScatterPlotExample grafico1;
     private static ScatterPlotExample grafico2;
+    private JButton btnMostrarCentroides;
+    private JButton btnMostrarClusters;
 
 	/**
 	 * Launch the application.
@@ -101,7 +104,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Algoritmos genéticos para el análisis de clusters");
-		this.setBounds(5, 5, 797, 648);
+		this.setBounds(5, 5, 802, 648);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		this.setContentPane(contentPane);
@@ -115,19 +118,31 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 		contentPane.add(botonEjecutar);
 		botonEjecutar.setVisible(false);
 		
-		btnMostrarGraficoGenetico = new JButton("Mostrar Gráfico");
-		btnMostrarGraficoGenetico.setBounds(227, 553, 179, 23);
+		btnMostrarGraficoGenetico = new JButton("Gráfico");
+		btnMostrarGraficoGenetico.setBounds(227, 553, 141, 23);
 		btnMostrarGraficoGenetico.addActionListener(this);
 		contentPane.add(btnMostrarGraficoGenetico);
 		btnMostrarGraficoGenetico.setEnabled(false);
 		btnMostrarGraficoGenetico.setVisible(false);
 		
-		btnMostrarGraficoKMeans = new JButton("Mostrar Gráfico K-Means");
-		btnMostrarGraficoKMeans.setBounds(421, 553, 179, 23);
+		btnMostrarGraficoKMeans = new JButton("Gráfico K-Means");
+		btnMostrarGraficoKMeans.setBounds(388, 553, 141, 23);
 		btnMostrarGraficoKMeans.addActionListener(this);
 		contentPane.add(btnMostrarGraficoKMeans);
 		btnMostrarGraficoKMeans.setEnabled(false);
 		btnMostrarGraficoKMeans.setVisible(false);
+		
+		btnMostrarCentroides = new JButton("Centroides");
+		btnMostrarCentroides.setBounds(539, 553, 102, 23);
+		btnMostrarCentroides.addActionListener(this);
+		contentPane.add(btnMostrarCentroides);
+//		btnMostrarGraficoKMeans.setEnabled(false);
+//		btnMostrarGraficoKMeans.setVisible(false);
+		
+		btnMostrarClusters = new JButton("Clusters");
+		btnMostrarClusters.setBounds(651, 553, 89, 23);
+		btnMostrarClusters.addActionListener(this);
+		contentPane.add(btnMostrarClusters);
 		
 		botonCancelar = new JButton("Cancelar");
 		botonCancelar.setBounds(123, 553, 89, 23);
@@ -139,7 +154,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
  		textArea1.setEditable(false);
  		
  		scrollpane1=new JScrollPane(textArea1);
- 		scrollpane1.setBounds(300, 150, 450, 300);
+ 		scrollpane1.setBounds(300, 150, 475, 375);
  		contentPane.add(scrollpane1);
 		
 		labelCantidadClusters = new JLabel("labelCantidadClusters");
@@ -179,7 +194,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 		bg=new ButtonGroup();
 		
 		rdbtnClusteringGenetico = new JRadioButton("Clustering Genético");
-		rdbtnClusteringGenetico.setBounds(15, 119, 173, 23);
+		rdbtnClusteringGenetico.setBounds(15, 115, 173, 23);
 		rdbtnClusteringGenetico.addChangeListener(this);
 		rdbtnClusteringGenetico.setToolTipText("Realiza el clustering utilizando un algoritmo genético.");
 		contentPane.add(rdbtnClusteringGenetico);
@@ -317,7 +332,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
         	botonEjecutar.setVisible(true);
         	botonCancelar.setVisible(true);      
         	botonSeleccionarArchivo.setVisible(true);
-    		btnMostrarGraficoGenetico.setText("Mostrar Gráfico");
+    		btnMostrarGraficoGenetico.setText("Gráfico");
     		btnMostrarGraficoGenetico.setVisible(true);
     		btnMostrarGraficoKMeans.setEnabled(false);
     		btnMostrarGraficoKMeans.setVisible(false);
@@ -351,7 +366,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
         	botonEjecutar.setVisible(true);
         	botonCancelar.setVisible(true);
         	botonSeleccionarArchivo.setVisible(true);
-    		btnMostrarGraficoGenetico.setText("Mostrar Gráfico");
+    		btnMostrarGraficoGenetico.setText("Gráfico");
     		btnMostrarGraficoGenetico.setVisible(true);
     		btnMostrarGraficoKMeans.setEnabled(false);
     		btnMostrarGraficoKMeans.setVisible(false);
@@ -387,9 +402,9 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
         	VentanaPrincipal.menu= 3;
         	botonEjecutar.setVisible(true);
         	botonCancelar.setVisible(true);
-        	btnMostrarGraficoGenetico.setText("Mostrar Gráf. Genético");
+        	btnMostrarGraficoGenetico.setText("Gráfico Genético");
     		btnMostrarGraficoGenetico.setVisible(true);
-    		btnMostrarGraficoKMeans.setText("Mostrar Gráf. K-Means");
+    		btnMostrarGraficoKMeans.setText("Gráfico K-Means");
     		btnMostrarGraficoKMeans.setVisible(true);
         	botonSeleccionarArchivo.setVisible(true);
         	labelCantidadClusters.setText("Cantidad de Clusters:");
@@ -514,7 +529,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 					}
 					else {
 						VentanaPrincipal.grafico1.setVisible(false);
-						this.btnMostrarGraficoGenetico.setText("Mostrar gráf. genético");				
+						this.btnMostrarGraficoGenetico.setText("Gráfico genético");				
 					}		
 				}
 				
@@ -522,11 +537,11 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 			else {				
 				if (VentanaPrincipal.grafico1.isVisible() == false) {
 					VentanaPrincipal.grafico1.setVisible(true);
-					this.btnMostrarGraficoGenetico.setText("Ocultar gráfico");
+					this.btnMostrarGraficoGenetico.setText("Ocultar Gráfico");
 				}
 				else {
 					VentanaPrincipal.grafico1.setVisible(false);
-					this.btnMostrarGraficoGenetico.setText("Mostrar gráfico");				
+					this.btnMostrarGraficoGenetico.setText("Gráfico");				
 				}				
 			}			
 		}		
@@ -538,7 +553,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 			}
 			else {
 				VentanaPrincipal.grafico2.setVisible(false);
-				this.btnMostrarGraficoKMeans.setText("Mostrar gráf. K-Means");				
+				this.btnMostrarGraficoKMeans.setText("Gráfico K-Means");				
 			}		
 		}
 		
@@ -546,6 +561,29 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 			VentanaPrincipal.banderaCancelar= true;
 			JOptionPane.showMessageDialog(null, "Ejecución Cancelada", "Aviso", JOptionPane.INFORMATION_MESSAGE);
 		}
+		
+        if (evento.getSource() == btnMostrarCentroides) {
+            try{
+            	if (VentanaPrincipal.menu == 1) {
+            		new VentanaCentroidesCase1(); 
+            	}
+            	else { 
+            		if (VentanaPrincipal.menu == 2) {
+            			new VentanaCentroidesCase2();
+            		}
+            		else {
+            			new VentanaCentroidesCase3();
+            		}
+            	}
+            
+            }catch(Exception ex){
+                ex.printStackTrace();
+            }
+        }
+        
+        if(evento.getSource() == btnMostrarClusters) {
+        	new VentanaClustersAsociados();
+        }
 		
 	}
 	

@@ -18,6 +18,8 @@ public class Kmeans {
 	static ArrayList<double[]> itemset = new ArrayList<double[]>();
 	static int dim = 0;
 	static int numTransactions = 0;
+	static IndividuoK mejorIndividuoCase3;
+	static ArrayList<double[]> puntosAsociados;
 	
 public static void PrepararGrafico (IndividuoK ind, int clusters, int dimension1, int dimension2) {
 		
@@ -248,10 +250,35 @@ public static void PrepararGrafico (IndividuoK ind, int clusters, int dimension1
 			int dimension1 = (int)VentanaPrincipal.getSpinnerDimensionX().getValue();//El usuario indica la dimensión 1 que desea graficar
 			int dimension2 = (int)VentanaPrincipal.getSpinnerDimensionY().getValue();//El usuario indica la dimensión 2 que desea graficar
 				
-			
+			Kmeans.armarTabla(IndividuoK);
+			mejorIndividuoCase3= IndividuoK;
 			PrepararGrafico (IndividuoK, IndividuoK.numClusters, (dimension1-1), (dimension2-1));
 			
 			
+	}
+	
+	//Imprime los puntos con sus clusters asociados
+	static void armarTabla(IndividuoK mejor){
+		ArrayList<double[]> salida = new ArrayList<double[]>();
+		System.out.println(" ");
+		System.out.println("Puntos asociados:");
+		for (int i = 0; i < numTransactions; i++) {
+			
+			double[] aux = new double [dim+1];
+			for (int j = 0; j<dim; j++) {
+				aux [j] = itemset.get(i)[j];
+			}
+			aux[dim] = mejor.genes[i];
+			salida.add(aux);
+			
+		}
+		double[] arreglo;
+		for (int i=0; i<numTransactions; i++) {
+			
+			arreglo = salida.get(i);
+			System.out.println(Arrays.toString(arreglo));
+			puntosAsociados= salida;
+		}
 	}
 	
 	 static double trunc (double num) {
