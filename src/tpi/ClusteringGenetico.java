@@ -48,7 +48,7 @@ public class ClusteringGenetico {
 		for (int i=0; i<numTransactions; i++) {
 			
 			arreglo = salida.get(i);
-			System.out.println(Arrays.toString(arreglo));
+			//System.out.println(Arrays.toString(arreglo));
 			puntosAsociados= salida;
 		}
 	}
@@ -84,7 +84,7 @@ public class ClusteringGenetico {
 						index++;
 					}
 				}
-			System.out.println(Arrays.toString(comp));
+			//System.out.println(Arrays.toString(comp));
 			componentes.add(comp);//arreglo de componentes de puntos del cluster i
 			}
 			Cluster clusteraux = new Cluster(dim, i, componentes);
@@ -290,6 +290,9 @@ public class ClusteringGenetico {
 				int m = 0; //indice de la poblacion de mejores
 				double mejorCalinski = 0; //Para determinar la mejor clasificación de clusters
 				int mejorIndex = 0;
+				int convergencia = 0;//NUEVO
+				int convergenciaGen = ((int)(generaciones*0.10));//NUEVO
+				int convergenciaInd = ((int)(cantidadIndividuos*0.40));//NUEVO
 				int dimensionX = (int)VentanaPrincipal.getSpinnerDimensionX().getValue();//El usuario indica la dimensión 1 que desea graficar
 				int dimensionY = (int)VentanaPrincipal.getSpinnerDimensionY().getValue();//El usuario indica la dimensión 2 que desea graficar
 				
@@ -332,20 +335,22 @@ public class ClusteringGenetico {
 					
 					//Inicia el AG
 					for (int i = 0; i<generaciones; i++) {
-									
+												
 						Individuo mejorFitness = population.getBest();
 						
 						//Guarda el individuo con mejor fitness
 						if (( mejorFitness.fitness > mejor.fitness)){
-							
+							convergencia = 0;//NUEVO
 							System.out.println(i);
 							mejor = mejorFitness;
 							System.out.println(mejor.fitness);
 							
 						}
 						
+						convergencia++;
+						
 						//System.out.println(mejorFitness.fitness);
-						//System.out.println(i);			
+						System.out.println(i);			
 						
 						//Crea la ruleta para la selección
 						population.naturalSelection();
@@ -353,6 +358,19 @@ public class ClusteringGenetico {
 						//Genera los individuos para la seguiente generación
 						//con un porcentaje de selección, cruza y mutación
 						population = population.generate();
+						
+						//NUEVO
+						if (convergencia == convergenciaGen ) {
+							System.out.println("Prematura");
+							Poblacion prematura = new Poblacion (itemset, convergenciaInd, 
+								  	seleccionar, cruzar, mutar, clusters, dim);
+							for (int a = 0; a < (convergenciaInd); a++) {
+								population.poblacion[cantidadIndividuos-a-1] = prematura.poblacion[a];
+								
+							}
+							convergencia = 0;
+						}
+						//Nuevo
 						
 						//Carga los centroides en los individuos nuevos mutados y cruzados
 						for (int j = selec; j < population.poblacion.length; j++) {
@@ -498,6 +516,9 @@ public class ClusteringGenetico {
 				int m = 0; //indice de la poblacion de mejores
 				double mejorCalinski = 0; //Para determinar la mejor clasificación de clusters
 				int mejorIndex = 0;
+				int convergencia = 0;//NUEVO
+				int convergenciaGen = ((int)(generaciones*0.10));//NUEVO
+				int convergenciaInd = ((int)(cantidadIndividuos*0.40));//NUEVO
 				int dimensionX = (int)VentanaPrincipal.getSpinnerDimensionX().getValue();//El usuario indica la dimensión 1 que desea graficar
 				int dimensionY = (int)VentanaPrincipal.getSpinnerDimensionY().getValue();//El usuario indica la dimensión 2 que desea graficar
 				
@@ -546,15 +567,17 @@ public class ClusteringGenetico {
 						
 						//Guarda el individuo con mejor fitness
 						if (( mejorFitness.fitness > mejor.fitness)){
-							
+							convergencia = 0;//NUEVO
 							System.out.println(i);
 							mejor = mejorFitness;
 							System.out.println(mejor.fitness);
 							
 						}
 						
+						convergencia++;
+						
 						//System.out.println(mejorFitness.fitness);
-						//System.out.println(i);			
+						System.out.println(i);			
 						
 						//Crea la ruleta para la selección
 						population.naturalSelection();
@@ -562,6 +585,19 @@ public class ClusteringGenetico {
 						//Genera los individuos para la seguiente generación
 						//con un porcentaje de selección, cruza y mutación
 						population = population.generate();
+						
+						//NUEVO
+						if (convergencia == convergenciaGen ) {
+							System.out.println("Prematura");
+							Poblacion prematura = new Poblacion (itemset, convergenciaInd, 
+								  	seleccionar, cruzar, mutar, clusters, dim);
+							for (int a = 0; a < (convergenciaInd); a++) {
+								population.poblacion[cantidadIndividuos-a-1] = prematura.poblacion[a];
+								
+							}
+							convergencia = 0;
+						}
+						//Nuevo
 						
 						//Carga los centroides en los individuos nuevos mutados y cruzados
 						for (int j = selec; j < population.poblacion.length; j++) {
@@ -762,6 +798,9 @@ public class ClusteringGenetico {
 				int m = 0; //indice de la poblacion de mejores
 				double mejorCalinski = 0; //Para determinar la mejor clasificación de clusters
 				int mejorIndex = 0;
+				int convergencia = 0;//NUEVO
+				int convergenciaGen = ((int)(generaciones*0.10));//NUEVO
+				int convergenciaInd = ((int)(cantidadIndividuos*0.40));//NUEVO
 				int dimensionX = (int)VentanaPrincipal.getSpinnerDimensionX().getValue();//El usuario indica la dimensión 1 que desea graficar
 				int dimensionY = (int)VentanaPrincipal.getSpinnerDimensionY().getValue();//El usuario indica la dimensión 2 que desea graficar
 				
@@ -808,15 +847,17 @@ public class ClusteringGenetico {
 						
 						//Guarda el individuo con mejor fitness
 						if (( mejorFitness.fitness > mejor.fitness)){
-							
+							convergencia = 0;//NUEVO
 							System.out.println(i);
 							mejor = mejorFitness;
 							System.out.println(mejor.fitness);
 							
 						}
 						
+						convergencia++;
+						
 						//System.out.println(mejorFitness.fitness);
-						//System.out.println(i);			
+						System.out.println(i);			
 						
 						//Crea la ruleta para la selección
 						population.naturalSelection();
@@ -824,6 +865,19 @@ public class ClusteringGenetico {
 						//Genera los individuos para la seguiente generación
 						//con un porcentaje de selección, cruza y mutación
 						population = population.generate();
+						
+						//NUEVO
+						if (convergencia == convergenciaGen ) {
+							System.out.println("Prematura");
+							Poblacion prematura = new Poblacion (itemset, convergenciaInd, 
+								  	seleccionar, cruzar, mutar, clusters, dim);
+							for (int a = 0; a < (convergenciaInd); a++) {
+								population.poblacion[cantidadIndividuos-a-1] = prematura.poblacion[a];
+								
+							}
+							convergencia = 0;
+						}
+						//Nuevo
 						
 						//Carga los centroides en los individuos nuevos mutados y cruzados
 						for (int j = selec; j < population.poblacion.length; j++) {

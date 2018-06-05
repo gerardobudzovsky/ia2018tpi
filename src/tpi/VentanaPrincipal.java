@@ -112,7 +112,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Algoritmos genéticos para el análisis de clusters");
-		this.setBounds(5, 5, 802, 648);
+		this.setBounds(5, 5, 836, 582);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		this.setContentPane(contentPane);
@@ -121,27 +121,27 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 		VentanaPrincipal.banderaCancelar= false;
 			
 		botonEjecutar = new JButton("Ejecutar");
-		botonEjecutar.setBounds(15, 553, 89, 23);
+		botonEjecutar.setBounds(12, 500, 89, 23);
 		botonEjecutar.addActionListener(this);
 		contentPane.add(botonEjecutar);
 		
 		btnMostrarGraficoGenetico = new JButton("Gráfico");
-		btnMostrarGraficoGenetico.setBounds(227, 553, 141, 23);
+		btnMostrarGraficoGenetico.setBounds(300, 500, 141, 23);
 		btnMostrarGraficoGenetico.addActionListener(this);
 		contentPane.add(btnMostrarGraficoGenetico);
 		
 		btnMostrarGraficoKMeans = new JButton("Gráfico K-Means");
-		btnMostrarGraficoKMeans.setBounds(388, 553, 141, 23);
+		btnMostrarGraficoKMeans.setBounds(453, 500, 141, 23);
 		btnMostrarGraficoKMeans.addActionListener(this);
 		contentPane.add(btnMostrarGraficoKMeans);
 		
 		btnMostrarCentroides = new JButton("Centroides");
-		btnMostrarCentroides.setBounds(539, 553, 102, 23);
+		btnMostrarCentroides.setBounds(606, 500, 102, 23);
 		btnMostrarCentroides.addActionListener(this);
 		contentPane.add(btnMostrarCentroides);
 		
 		btnMostrarClusters = new JButton("Clusters");
-		btnMostrarClusters.setBounds(651, 553, 89, 23);
+		btnMostrarClusters.setBounds(720, 500, 89, 23);
 		btnMostrarClusters.addActionListener(this);
 		contentPane.add(btnMostrarClusters);
 		
@@ -154,57 +154,56 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
  		textArea1.setEditable(false);
  		
  		scrollpane1=new JScrollPane(textArea1);
- 		scrollpane1.setBounds(300, 150, 475, 375);
+ 		scrollpane1.setBounds(300, 95, 509, 380);
  		contentPane.add(scrollpane1);
 		
 		labelCantidadClusters = new JLabel("labelCantidadClusters");
-		labelCantidadClusters.setBounds(15, 278, 141, 14);
+		labelCantidadClusters.setBounds(15, 244, 141, 14);
 		contentPane.add(labelCantidadClusters);
 		
 		spinnerCantidadClusters = new JSpinner();
-		spinnerCantidadClusters.setBounds(220, 273, 39, 23);
+		spinnerCantidadClusters.setBounds(220, 240, 39, 23);
 		spinnerCantidadClusters.setModel(new SpinnerNumberModel(2,2,100,1));
 		contentPane.add(spinnerCantidadClusters);
 		
 		lblClusterFinal = new JLabel("Cluster Final:");
-		lblClusterFinal.setBounds(15, 308, 102, 14);
+		lblClusterFinal.setBounds(15, 271, 102, 14);
 		contentPane.add(lblClusterFinal);
 		
 		spinnerClusterFinal = new JSpinner();
-		spinnerClusterFinal.setBounds(220, 305, 39, 20);
+		spinnerClusterFinal.setBounds(220, 268, 39, 20);
 		spinnerClusterFinal.setModel(new SpinnerNumberModel(3,3,100,1));
 		contentPane.add(spinnerClusterFinal);
 		
 		fc = new JFileChooser("C:\\");
 		
 		botonSeleccionarArchivo = new JButton("Seleccionar Archivo");
-		botonSeleccionarArchivo.setBounds(15, 239, 153, 23);
+		botonSeleccionarArchivo.setBounds(15, 192, 153, 23);
 		botonSeleccionarArchivo.addActionListener(this);
 		contentPane.add(botonSeleccionarArchivo);
 		
         lblArchivoSubido = new JLabel("");
-		lblArchivoSubido.setBounds(180, 242, 108, 16);
+		lblArchivoSubido.setBounds(180, 199, 108, 16);
 		contentPane.add(lblArchivoSubido);
         contentPane.add(botonSeleccionarArchivo);
 		
 		bg=new ButtonGroup();
-		
 		rdbtnClusteringGenetico = new JRadioButton("Clustering Genético");
-		rdbtnClusteringGenetico.setBounds(15, 115, 173, 23);
+		rdbtnClusteringGenetico.setBounds(15, 93, 173, 23);
 		rdbtnClusteringGenetico.addChangeListener(this);
 		rdbtnClusteringGenetico.setToolTipText("Realiza el clustering utilizando un algoritmo genético.");
 		contentPane.add(rdbtnClusteringGenetico);
-		bg.add(rdbtnClusteringGenetico);		
+		bg.add(rdbtnClusteringGenetico);
 		
 		rdbtnClusteringGeneticoPor = new JRadioButton("Clustering Genético Por Rangos");
-		rdbtnClusteringGeneticoPor.setBounds(15, 150, 261, 23);
+		rdbtnClusteringGeneticoPor.setBounds(15, 121, 261, 23);
 		rdbtnClusteringGeneticoPor.addChangeListener(this);
 		rdbtnClusteringGeneticoPor.setToolTipText("Permite ingresar un rango de clústers y devuelve la mejor configuración.");		contentPane.add(rdbtnClusteringGeneticoPor);
 		contentPane.add(rdbtnClusteringGeneticoPor);
 		bg.add(rdbtnClusteringGeneticoPor);
 		
 		rdbtnComparacinConKmeans = new JRadioButton("Comparaci\u00F3n con K-Means");
-		rdbtnComparacinConKmeans.setBounds(15, 183, 228, 23);
+		rdbtnComparacinConKmeans.setBounds(15, 151, 228, 23);
 		rdbtnComparacinConKmeans.addChangeListener(this);
 		rdbtnComparacinConKmeans.setToolTipText("Compara el algoritmo genético con el algoritmo K-means.");
 		contentPane.add(rdbtnComparacinConKmeans);
@@ -212,71 +211,71 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 		
 		
 		lblPorcentajeSeleccion = new JLabel("Porcentaje de Selección");
-		lblPorcentajeSeleccion.setBounds(15, 338, 173, 14);
+		lblPorcentajeSeleccion.setBounds(15, 298, 173, 14);
 		lblPorcentajeSeleccion.setToolTipText("Define el porcentaje que se va a seleccionar del dataset por selección elitista.");
 		contentPane.add(lblPorcentajeSeleccion);
 		
 		lblPorcentajeCruza = new JLabel("Porcentaje de Cruza");
-		lblPorcentajeCruza.setBounds(15, 362, 153, 14);
+		lblPorcentajeCruza.setBounds(15, 325, 153, 14);
 		lblPorcentajeCruza.setToolTipText("Define el porcentaje que se va a cruzar del dataset por cruza simple.");
 		contentPane.add(lblPorcentajeSeleccion);
 		contentPane.add(lblPorcentajeCruza);
 		
 		lblPorcentajeMutacion = new JLabel("Porcentaje de Mutación");
-		lblPorcentajeMutacion.setBounds(15, 392, 173, 14);
+		lblPorcentajeMutacion.setBounds(15, 352, 173, 14);
 		lblPorcentajeMutacion.setToolTipText("Define el porcentaje que se va a mutar del dataset por mutación simple.");
 		contentPane.add(lblPorcentajeMutacion);
 		
 		spinnerPorcentajeSeleccion = new JSpinner();
-		spinnerPorcentajeSeleccion.setBounds(220, 333, 39, 23);
+		spinnerPorcentajeSeleccion.setBounds(220, 294, 39, 23);
 		spinnerPorcentajeSeleccion.setModel(new SpinnerNumberModel(10,1,100,1));
 		spinnerPorcentajeSeleccion.setToolTipText("Define el porcentaje que se va a seleccionar del dataset por selección elitista.");
 		contentPane.add(spinnerPorcentajeSeleccion);
 		
 		spinnerPorcentajeCruza = new JSpinner();
-		spinnerPorcentajeCruza.setBounds(220, 357, 39, 23);
+		spinnerPorcentajeCruza.setBounds(220, 321, 39, 23);
 		spinnerPorcentajeCruza.setModel(new SpinnerNumberModel(85,1,100,1));
 		spinnerPorcentajeCruza.setToolTipText("Define el porcentaje que se va a cruzar del dataset por cruza simple.");
 		contentPane.add(spinnerPorcentajeCruza);
 		
 		spinnerPorcentajeMutacion = new JSpinner();
-		spinnerPorcentajeMutacion.setBounds(220, 387, 39, 23);
+		spinnerPorcentajeMutacion.setBounds(220, 348, 39, 23);
 		spinnerPorcentajeMutacion.setModel(new SpinnerNumberModel(5,1,100,1));
 		spinnerPorcentajeMutacion.setToolTipText("Define el porcentaje que se va a mutar del dataset por mutación simple.");
 		contentPane.add(spinnerPorcentajeMutacion);
 		
 		lblCantidadIndividuos = new JLabel("Cantidad de Individuos:");
-		lblCantidadIndividuos.setBounds(15, 422, 173, 14);
+		lblCantidadIndividuos.setBounds(15, 379, 173, 14);
 		contentPane.add(lblCantidadIndividuos);
 		
 		lblCantidadGeneraciones = new JLabel("Cantidad de Generaciones:");
-		lblCantidadGeneraciones.setBounds(15, 449, 173, 14);
+		lblCantidadGeneraciones.setBounds(15, 406, 173, 14);
 		contentPane.add(lblCantidadGeneraciones);
 		
 		spinnerCantidadIndividuos = new JSpinner();
-		spinnerCantidadIndividuos.setBounds(220, 417, 47, 23);
+		spinnerCantidadIndividuos.setBounds(212, 375, 47, 23);
 		spinnerCantidadIndividuos.setModel(new SpinnerNumberModel(100,2,10000,1));
 		contentPane.add(spinnerCantidadIndividuos);
 		
 		spinnerCantidadGeneraciones = new JSpinner();
-		spinnerCantidadGeneraciones.setBounds(219, 444, 47, 23);
+		spinnerCantidadGeneraciones.setBounds(212, 402, 47, 23);
 		spinnerCantidadGeneraciones.setModel(new SpinnerNumberModel(100,2,10000,1));
 		contentPane.add(spinnerCantidadGeneraciones);
 		
 		lblDimensionX = new JLabel("Dimensi\u00F3n X: ");
-		lblDimensionX.setBounds(15, 479, 102, 14);
+		lblDimensionX.setBounds(15, 433, 102, 14);
 		contentPane.add(lblDimensionX);
 		
 		lblDimensionY = new JLabel("Dimensi\u00F3n Y: ");
-		lblDimensionY.setBounds(15, 509, 102, 14);
+		lblDimensionY.setBounds(15, 460, 102, 14);
 		contentPane.add(lblDimensionY);
 		
 		spinnerDimensionX = new JSpinner();
-		spinnerDimensionX.setBounds(220, 476, 39, 20);
+		spinnerDimensionX.setBounds(220, 430, 39, 20);
 		contentPane.add(spinnerDimensionX);
 		
 		spinnerDimensionY = new JSpinner();
-		spinnerDimensionY.setBounds(220, 506, 40, 20);
+		spinnerDimensionY.setBounds(219, 457, 40, 20);
 		contentPane.add(spinnerDimensionY);
 		
 		//Read the picture as a BufferedImage
@@ -288,8 +287,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 		    e.printStackTrace();
 		}
 		
-		lblLogo = new JLabel("TITULO TITULO TITULO TITULO TITULO TITULO TITULO TITULO TITULO");
-		lblLogo.setBounds(99, 16, 550, 55);
+		lblLogo = new JLabel("TITULO TITULO TITULO TITULO TITULO TITULO TITULO TITULO TITULO TITULO TITULO TITULO");
+		lblLogo.setBounds(123, 13, 550, 55);
 		contentPane.add(lblLogo);
 		
 		//Resize the BufferedImage
@@ -304,35 +303,88 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 	}
 	
 	@Override
-	public void stateChanged(ChangeEvent arg0) {
+	public void stateChanged(ChangeEvent e) {
 		
         if (rdbtnClusteringGenetico.isSelected()) {    	
         	VentanaPrincipal.menu= 1;
     		btnMostrarGraficoGenetico.setText("Gráfico");
-
-        	labelCantidadClusters.setText("Cantidad de Clusters:");
+    		btnMostrarGraficoGenetico.setToolTipText("Muestra el gráfico generado por el algoritmo genético");
+        	btnMostrarCentroides.setToolTipText("Muestra los centroides de las agrupaciones");
+        	btnMostrarClusters.setToolTipText("Muestra los puntos con su cluster correspondiente.");
+    		labelCantidadClusters.setText("Cantidad de Clusters:");
         	labelCantidadClusters.setToolTipText("Define la cantidad de clústers en las que se quiere dividir el dataset.");
     		spinnerCantidadClusters.setToolTipText("Define la cantidad de clústers en las que se quiere dividir el dataset.");
+    		spinnerCantidadClusters.setEnabled(true);
+    		spinnerCantidadClusters.setVisible(true);
+    		lblClusterFinal.setEnabled(false);
+    		lblClusterFinal.setVisible(true);
+    		spinnerClusterFinal.setEnabled(false);
+    		spinnerClusterFinal.setVisible(true);
+//    		btnMostrarGraficoGenetico.setEnabled(false);
+//    		btnMostrarGraficoGenetico.setVisible(true);
+//    		btnMostrarGraficoKMeans.setEnabled(false);
+    		btnMostrarGraficoKMeans.setVisible(true);
+    		labelCantidadClusters.setEnabled(true);
+    		labelCantidadClusters.setVisible(true);
+//    		btnMostrarCentroides.setEnabled(false);
+//    		btnMostrarCentroides.setVisible(true);
+//    		btnMostrarClusters.setEnabled(false);
+//    		btnMostrarClusters.setVisible(true);
         }
         if (rdbtnClusteringGeneticoPor.isSelected()) {
         	VentanaPrincipal.menu= 2;
-
     		btnMostrarGraficoGenetico.setText("Gráfico");
-        	labelCantidadClusters.setText("Cluster Inicial:");
-        	labelCantidadClusters.setToolTipText("Define la mínima cantidad de clusters a evaluar");
-        	spinnerCantidadClusters.setToolTipText("Define la mínima cantidad de clusters a evaluar");
-        	lblClusterFinal.setToolTipText("Define la máxima cantidad de clusters a evaluar");
-        	spinnerClusterFinal.setToolTipText("Define la máxima cantidad de clusters a evaluar");
+    		btnMostrarGraficoGenetico.setToolTipText("Muestra el gráfico de la mejor configuración de clusters.");
+        	btnMostrarCentroides.setToolTipText("Muestra los centroides de la mejor configuración.");
+        	btnMostrarClusters.setToolTipText("Muestra los puntos de la mejor configuración con su cluster correspondiente.");
+    		labelCantidadClusters.setText("Cluster Inicial:");
+        	labelCantidadClusters.setToolTipText("Define la mínima cantidad de clusters a evaluar.");
+        	spinnerCantidadClusters.setToolTipText("Define la mínima cantidad de clusters a evaluar.");
+        	lblClusterFinal.setToolTipText("Define la máxima cantidad de clusters a evaluar.");
+        	spinnerClusterFinal.setToolTipText("Define la máxima cantidad de clusters a evaluar.");
+    		spinnerCantidadClusters.setEnabled(true);
+    		spinnerCantidadClusters.setVisible(true);
+    		lblClusterFinal.setEnabled(true);
+    		lblClusterFinal.setVisible(true);
+    		spinnerClusterFinal.setEnabled(true);
+    		spinnerClusterFinal.setVisible(true);
+//    		btnMostrarGraficoGenetico.setEnabled(false);
+//    		btnMostrarGraficoGenetico.setVisible(true);
+//    		btnMostrarGraficoKMeans.setEnabled(false);
+    		btnMostrarGraficoKMeans.setVisible(true);
+    		labelCantidadClusters.setEnabled(true);
+    		labelCantidadClusters.setVisible(true);
+//    		btnMostrarCentroides.setEnabled(false);
+//    		btnMostrarCentroides.setVisible(true);
+//    		btnMostrarClusters.setEnabled(false);
+//    		btnMostrarClusters.setVisible(true);
         }
         if (rdbtnComparacinConKmeans.isSelected()) {
         	VentanaPrincipal.menu= 3;
-
         	btnMostrarGraficoGenetico.setText("Gráfico Genético");
-
+    		btnMostrarGraficoGenetico.setToolTipText("Muestra el gráfico generado por el algoritmo genético.");
     		btnMostrarGraficoKMeans.setText("Gráfico K-Means");
+        	btnMostrarCentroides.setToolTipText("Muestra los centroides de clustering genético y K-means.");
+        	btnMostrarClusters.setToolTipText("Muestra los puntos de clustering genético y K-means con su cluster correspondiente");
         	labelCantidadClusters.setText("Cantidad de Clusters:");
         	labelCantidadClusters.setToolTipText("Define la cantidad de clústers en las que se quiere dividir el dataset.");
     		spinnerCantidadClusters.setToolTipText("Define la cantidad de clústers en las que se quiere dividir el dataset.");
+    		spinnerCantidadClusters.setEnabled(true);
+    		spinnerCantidadClusters.setVisible(true);
+    		lblClusterFinal.setEnabled(false);
+    		lblClusterFinal.setVisible(true);
+    		spinnerClusterFinal.setEnabled(false);
+    		spinnerClusterFinal.setVisible(true);
+//    		btnMostrarGraficoGenetico.setEnabled(false);
+//    		btnMostrarGraficoGenetico.setVisible(true);
+//    		btnMostrarGraficoKMeans.setEnabled(false);
+    		btnMostrarGraficoKMeans.setVisible(true);
+    		labelCantidadClusters.setEnabled(true);
+    		labelCantidadClusters.setVisible(true);
+//    		btnMostrarCentroides.setEnabled(false);
+//    		btnMostrarCentroides.setVisible(true);
+//    		btnMostrarClusters.setEnabled(false);
+//    		btnMostrarClusters.setVisible(true);
         } 
 		
 	}
@@ -349,8 +401,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
                //This is where a real application would open the file.
                lblArchivoSubido.setText(file.getName());
                
-               try {
-            	   
+               try {            	   
             	int cantidadTransaccionesMenosUno= this.obtenerNumeroDeTransacciones() - 1;            	
             	spinnerCantidadClusters.setModel(new SpinnerNumberModel(2,2,cantidadTransaccionesMenosUno,1));
             	spinnerClusterFinal.setModel(new SpinnerNumberModel(3,3,cantidadTransaccionesMenosUno,1));
@@ -407,6 +458,25 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 		            textArea1.append("El dataset "+ file.getName() + " tiene " + this.obtenerNumeroDeDimensiones() + " dimensiones." + newline);
 		            textArea1.append(newline);
 					ClusteringGenetico.ejecutar();
+//					if (VentanaPrincipal.menu == 3) {
+//			    		btnMostrarGraficoGenetico.setEnabled(true);
+//			    		btnMostrarGraficoGenetico.setVisible(true);
+//			    		btnMostrarGraficoKMeans.setEnabled(true);
+//			    		btnMostrarGraficoKMeans.setVisible(true);
+//			    		btnMostrarCentroides.setEnabled(true);
+//			    		btnMostrarCentroides.setVisible(true);
+//			    		btnMostrarClusters.setEnabled(true);
+//			    		btnMostrarClusters.setVisible(true);
+//					} else {
+//			    		btnMostrarGraficoGenetico.setEnabled(true);
+//			    		btnMostrarGraficoGenetico.setVisible(true);
+//			    		btnMostrarGraficoKMeans.setEnabled(false);
+//			    		btnMostrarGraficoKMeans.setVisible(true);
+//			    		btnMostrarCentroides.setEnabled(true);
+//			    		btnMostrarCentroides.setVisible(true);
+//			    		btnMostrarClusters.setEnabled(true);
+//			    		btnMostrarClusters.setVisible(true);
+//					}
 					VentanaPrincipal.textArea1.append("El tiempo de ejecución del programa fue de " + ClusteringGenetico.tiempoDeEjecucion + " segundos.");
 					JOptionPane.showMessageDialog(null, "El programa se ejecutó con éxito en " + ClusteringGenetico.tiempoDeEjecucion + " segundos.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				}				
@@ -443,15 +513,22 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 		}		
 			
 		if (evento.getSource() == btnMostrarGraficoKMeans) {
-			if (VentanaPrincipal.grafico2.isVisible() == false) {
-				this.btnMostrarGraficoKMeans.setText("Gráfico K-Means");
-				VentanaPrincipal.grafico2.setVisible(true);
+			
+			if (menu != 3) {
+				JOptionPane.showMessageDialog(null, "Este gráfico sólo está habilitado para la opción 'Comparación con K-Means'", "Aviso", JOptionPane.INFORMATION_MESSAGE);
 			}
-			else {
-				this.btnMostrarGraficoKMeans.setText("Gráfico K-Means");
-				VentanaPrincipal.grafico2.setVisible(false);
-
-			}		
+			else {					
+				if (VentanaPrincipal.grafico2.isVisible() == false) {
+					this.btnMostrarGraficoKMeans.setText("Gráfico K-Means");
+					VentanaPrincipal.grafico2.setVisible(true);
+				}
+				else {
+					this.btnMostrarGraficoKMeans.setText("Gráfico K-Means");
+					VentanaPrincipal.grafico2.setVisible(false);
+				}				
+			}
+			
+		
 		}
 		
 //		if (evento.getSource() == botonCancelar) {			
