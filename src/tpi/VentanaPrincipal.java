@@ -97,6 +97,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 					VentanaPrincipal ventana1 = new VentanaPrincipal();
 					ventana1.setVisible(true);
 			        ventana1.setResizable(false);
+			        ventana1.rdbtnClusteringGenetico.setSelected(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -116,9 +117,9 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		this.setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+				
 		VentanaPrincipal.banderaCancelar= false;
-		
+			
 		botonEjecutar = new JButton("Ejecutar");
 		botonEjecutar.setBounds(15, 553, 89, 23);
 		botonEjecutar.addActionListener(this);
@@ -193,12 +194,12 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 		rdbtnClusteringGenetico.addChangeListener(this);
 		rdbtnClusteringGenetico.setToolTipText("Realiza el clustering utilizando un algoritmo genético.");
 		contentPane.add(rdbtnClusteringGenetico);
-		bg.add(rdbtnClusteringGenetico);
+		bg.add(rdbtnClusteringGenetico);		
 		
 		rdbtnClusteringGeneticoPor = new JRadioButton("Clustering Genético Por Rangos");
 		rdbtnClusteringGeneticoPor.setBounds(15, 150, 261, 23);
 		rdbtnClusteringGeneticoPor.addChangeListener(this);
-		rdbtnClusteringGeneticoPor.setToolTipText("Permite ingresar un rango de clústers y devuelve la mejor configuración.");
+		rdbtnClusteringGeneticoPor.setToolTipText("Permite ingresar un rango de clústers y devuelve la mejor configuración.");		contentPane.add(rdbtnClusteringGeneticoPor);
 		contentPane.add(rdbtnClusteringGeneticoPor);
 		bg.add(rdbtnClusteringGeneticoPor);
 		
@@ -208,6 +209,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 		rdbtnComparacinConKmeans.setToolTipText("Compara el algoritmo genético con el algoritmo K-means.");
 		contentPane.add(rdbtnComparacinConKmeans);
 		bg.add(rdbtnComparacinConKmeans);
+		
 		
 		lblPorcentajeSeleccion = new JLabel("Porcentaje de Selección");
 		lblPorcentajeSeleccion.setBounds(15, 338, 173, 14);
@@ -331,7 +333,6 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
         	labelCantidadClusters.setText("Cantidad de Clusters:");
         	labelCantidadClusters.setToolTipText("Define la cantidad de clústers en las que se quiere dividir el dataset.");
     		spinnerCantidadClusters.setToolTipText("Define la cantidad de clústers en las que se quiere dividir el dataset.");
-
         } 
 		
 	}
@@ -361,7 +362,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 				lblDimensionY.setToolTipText("Define una dimensión a graficar del dataset entre 1 y "+nroDimensiones);
 				spinnerDimensionY.setModel(new SpinnerNumberModel(2,1,nroDimensiones,1));
 				spinnerDimensionY.setToolTipText("Define una dimensión a graficar del dataset entre 1 y "+nroDimensiones);
-	            textArea1.append("El dataset tiene " + nroDimensiones + " dimensiones." + newline);
+	            textArea1.append("El dataset " + file.getName() + " tiene " + nroDimensiones + " dimensiones." + newline);
 	            textArea1.append(newline);
 				
 			   } catch (Exception e) {
@@ -376,8 +377,13 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 		
 		if (evento.getSource() == botonEjecutar) {
 			
-			boolean existeError;
-			existeError= false;
+			boolean existeError = false;
+			
+			if(file == null){
+				existeError= true;
+				JOptionPane.showMessageDialog(null, "Especificar el archivo dataset", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+			
 			int sumaPorcentajes= (int)VentanaPrincipal.spinnerPorcentajeSeleccion.getValue() + (int)VentanaPrincipal.spinnerPorcentajeCruza.getValue() + (int)VentanaPrincipal.spinnerPorcentajeMutacion.getValue();
 			if (sumaPorcentajes != 100) {
 				existeError= true;
@@ -389,11 +395,6 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 				JOptionPane.showMessageDialog(null, "El cluster final no puede ser menor o igual al cluster inicial", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 			
-			if(file == null){
-				existeError= true;
-				JOptionPane.showMessageDialog(null, "Especificar el archivo dataset", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-			
 			if ((int)spinnerDimensionX.getValue() == (int)spinnerDimensionY.getValue()) {
 				existeError= true;
 				JOptionPane.showMessageDialog(null, "Debe elegir dos dimensiones diferentes", "Error", JOptionPane.ERROR_MESSAGE);
@@ -403,11 +404,11 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 			try {
 				if (existeError == false) {					
 					VentanaPrincipal.textArea1.setText("");
-		            textArea1.append("El dataset tiene " + this.obtenerNumeroDeDimensiones() + " dimensiones." + newline);
+		            textArea1.append("El dataset "+ file.getName() + " tiene " + this.obtenerNumeroDeDimensiones() + " dimensiones." + newline);
 		            textArea1.append(newline);
 					ClusteringGenetico.ejecutar();
 					VentanaPrincipal.textArea1.append("El tiempo de ejecución del programa fue de " + ClusteringGenetico.tiempoDeEjecucion + " segundos.");
-					JOptionPane.showMessageDialog(null, "El programa se ejecutó con éxito " + ClusteringGenetico.tiempoDeEjecucion + " segundos.", "Información", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(null, "El programa se ejecutó con éxito en " + ClusteringGenetico.tiempoDeEjecucion + " segundos.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				}				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -419,11 +420,11 @@ public class VentanaPrincipal extends JFrame implements ActionListener, ChangeLi
 			if (VentanaPrincipal.menu == 3) {				
 				if (evento.getSource() == btnMostrarGraficoGenetico) {					
 					if (VentanaPrincipal.grafico1.isVisible() == false) {
-						this.btnMostrarGraficoGenetico.setText("Gráfico genético");
+						this.btnMostrarGraficoGenetico.setText("Gráfico Genético");
 						VentanaPrincipal.grafico1.setVisible(true);
 					}
 					else {
-						this.btnMostrarGraficoGenetico.setText("Gráfico genético");
+						this.btnMostrarGraficoGenetico.setText("Gráfico Genético");
 						VentanaPrincipal.grafico1.setVisible(false);
 					}		
 				}

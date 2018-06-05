@@ -33,6 +33,7 @@ public class VentanaClustersAsociadosCase1y2 extends JDialog{
 		this.setTitle("Clusters Asociados");
 		this.setBounds(200, 150, 640, 480);
 		this.getContentPane().setLayout(new BorderLayout());
+		this.contentPanel.setLayout(null);
         this.contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         this.getContentPane().add(contentPanel, BorderLayout.CENTER);
 
@@ -68,50 +69,46 @@ public class VentanaClustersAsociadosCase1y2 extends JDialog{
             }
         };
 
-        table1 = new JTable( model );
-
+        table1 = new JTable(model);
         table1.setAutoCreateRowSorter(true);
-
 		
         scrollPane = new JScrollPane(table1);
         scrollPane.setBounds(10,11,343,419);
         contentPanel.add(scrollPane);
+        
 		scrollPane.setViewportView(table1);
         
-        lblNivelesDeConfiabilidad = new JLabel("Clusters Asociados");
-        lblNivelesDeConfiabilidad.setBounds(438, 11, 141, 15);
+        lblNivelesDeConfiabilidad = new JLabel("Datos");
+        lblNivelesDeConfiabilidad.setBounds(363, 11, 226, 15);
         lblNivelesDeConfiabilidad.setFont(new Font("Tahoma", Font.BOLD, 12));
         contentPanel.add(lblNivelesDeConfiabilidad);
         
         lblNewLabel = new JLabel("");
-        lblNewLabel.setBounds(366, 141, 248, 115);
+        lblNewLabel.setBounds(373, 45, 210, 38);
         contentPanel.add(lblNewLabel);
-        double fitnessMejorIndividuo;
+        double fitnessMejorIndividuo = 0;
         if (VentanaPrincipal.getMenu() == 1) {
         	fitnessMejorIndividuo= ClusteringGenetico.mejorIndividuoCase1.fitness;
 		} else {
-			fitnessMejorIndividuo= ClusteringGenetico.mejorIndividuoCase2.fitness;
+			if (VentanaPrincipal.getMenu() == 2) {
+				fitnessMejorIndividuo= ClusteringGenetico.mejorIndividuoCase2.fitness;
+			}
 		}
 		lblNewLabel.setText("<html>"
-	            +"<b>Fitness</b>"
-	            +"<br>"
-	            +trunc(fitnessMejorIndividuo)
-	            +"</html>");
+							+ "<p>Fitness :" +trunc(fitnessMejorIndividuo) + "</p>"							
+							+"</html>");
         
         JPanel panel = new JPanel();
         panel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-        panel.setBounds(363, 136, 251, 222);
+        panel.setBounds(363, 37, 251, 66);
         contentPanel.add(panel);
         
         this.show();
 	}
 	
-	 static double trunc (double num) {
-		 double truncado;
-		 truncado=Math.floor(num*1000)/1000; 
-		 return truncado;
-	 }
-	 
+	static double trunc (double num) {
+		double truncado;
+		truncado=Math.floor(num*1000)/1000; 
+		return truncado;
+	}	 
 }
-
-

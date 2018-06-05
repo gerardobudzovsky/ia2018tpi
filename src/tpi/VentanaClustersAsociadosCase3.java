@@ -23,8 +23,8 @@ import javax.swing.border.BevelBorder;
 public class VentanaClustersAsociadosCase3 extends JDialog implements ChangeListener{
 
 	private final JPanel contentPanel = new JPanel();
-	private JRadioButton rdbtnMuyConfiable;
-	private JRadioButton rdbtnConfiable;
+	private JRadioButton rdbtnGenetico;
+	private JRadioButton rdbtnKMeans;
 	private ButtonGroup bg;
 	private JLabel lblNivelesDeConfiabilidad;
 	private JLabel lblNewLabel;
@@ -116,31 +116,31 @@ public class VentanaClustersAsociadosCase3 extends JDialog implements ChangeList
 		
         bg=new ButtonGroup();
 		
-		rdbtnMuyConfiable = new JRadioButton("Genético");
-		rdbtnMuyConfiable.setBounds(448, 33, 109, 23);
-		rdbtnMuyConfiable.addChangeListener(this);
+		rdbtnGenetico = new JRadioButton("Genético");
+		rdbtnGenetico.setBounds(373, 33, 109, 23);
+		rdbtnGenetico.addChangeListener(this);
 		contentPanel.setLayout(null);
-		contentPanel.add(rdbtnMuyConfiable);
-        bg.add(rdbtnMuyConfiable);
+		contentPanel.add(rdbtnGenetico);
+        bg.add(rdbtnGenetico);
 		
-		rdbtnConfiable = new JRadioButton("K-Means");
-		rdbtnConfiable.setBounds(448, 59, 109, 23);
-		rdbtnConfiable.addChangeListener(this);
-		contentPanel.add(rdbtnConfiable);
-        bg.add(rdbtnConfiable);
+		rdbtnKMeans = new JRadioButton("K-Means");
+		rdbtnKMeans.setBounds(373, 59, 109, 23);
+		rdbtnKMeans.addChangeListener(this);
+		contentPanel.add(rdbtnKMeans);
+        bg.add(rdbtnKMeans);
         
         lblNivelesDeConfiabilidad = new JLabel("Clusters Asociados");
-        lblNivelesDeConfiabilidad.setBounds(438, 11, 141, 15);
+        lblNivelesDeConfiabilidad.setBounds(363, 11, 240, 15);
         lblNivelesDeConfiabilidad.setFont(new Font("Tahoma", Font.BOLD, 12));
         contentPanel.add(lblNivelesDeConfiabilidad);
         
         lblNewLabel = new JLabel("");
-        lblNewLabel.setBounds(366, 141, 248, 115);
+        lblNewLabel.setBounds(366, 102, 248, 48);
         contentPanel.add(lblNewLabel);
         
         JPanel panel = new JPanel();
         panel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-        panel.setBounds(363, 136, 251, 222);
+        panel.setBounds(363, 89, 251, 69);
         contentPanel.add(panel);
         
         this.show();
@@ -149,7 +149,7 @@ public class VentanaClustersAsociadosCase3 extends JDialog implements ChangeList
 	@Override
 	public void stateChanged(ChangeEvent e) {
 		
-		if (rdbtnMuyConfiable.isSelected()) {
+		if (rdbtnGenetico.isSelected()) {
 			scrollPane.setViewportView(table1);
 			lblNewLabel.setText("<html>"
 					            +"<b>Fitness</b>"
@@ -158,7 +158,7 @@ public class VentanaClustersAsociadosCase3 extends JDialog implements ChangeList
 		    		            +"</html>");			
 		}
 		
-		if (rdbtnConfiable.isSelected()) {
+		if (rdbtnKMeans.isSelected()) {
 			scrollPane.setViewportView(table2);
 			lblNewLabel.setText("<html>"
 			                    +"<b>Fitness</b>"
@@ -173,6 +173,15 @@ public class VentanaClustersAsociadosCase3 extends JDialog implements ChangeList
 		 truncado=Math.floor(num*1000)/1000; 
 		 return truncado;
 	 }
+	 
+	public JRadioButton getRdbtnGenetico() {
+		return rdbtnGenetico;
+	}
+
+	public void setRdbtnGenetico(JRadioButton rdbtnGenetico) {
+		this.rdbtnGenetico = rdbtnGenetico;
+	}
+
 	 
 }
 

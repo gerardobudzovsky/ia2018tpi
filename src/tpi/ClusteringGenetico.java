@@ -950,11 +950,13 @@ public class ClusteringGenetico {
 				Kmeans.ejecutar();
 				
 				VentanaCentroidesCase3 ventanaCentroidesCase3 = new VentanaCentroidesCase3();
+				ventanaCentroidesCase3.getRdbtnGenetico().setSelected(true);
 				VentanaPrincipal.setVentanaCentroidesCase3(ventanaCentroidesCase3);
 				VentanaPrincipal.getVentanaCentroidesCase3().setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 				VentanaPrincipal.getVentanaCentroidesCase3().setVisible(false);
 				
 				VentanaClustersAsociadosCase3 ventanaClustersAsociadosCase3 = new VentanaClustersAsociadosCase3();
+				ventanaClustersAsociadosCase3.getRdbtnGenetico().setSelected(true);
 				VentanaPrincipal.setVentanaClustersAsociadosCase3(ventanaClustersAsociadosCase3);
 				VentanaPrincipal.getVentanaClustersAsociadosCase3().setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 				VentanaPrincipal.getVentanaClustersAsociadosCase3().setVisible(false);
