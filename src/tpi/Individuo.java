@@ -148,8 +148,10 @@ public class Individuo {
 							cont++;
 						}
 						//calcula distancia del centroide y la media del dataset al cuadrado
-						distance = Math.pow(calculateDistance(mejor.centroides.get(i), media),2.0);
-						interClust = interClust + (cont*distance);
+						if (cont != 0) {
+							distance = Math.pow(calculateDistance(mejor.centroides.get(i), media),2.0);
+							interClust = interClust + (cont*distance);
+						}
 					}
 				}
 				return interClust;

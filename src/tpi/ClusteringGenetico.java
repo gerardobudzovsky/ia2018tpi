@@ -53,6 +53,7 @@ public class ClusteringGenetico {
 		}
 	}
 	
+	//Genera gráfico con los puntos pertenecientes a cada cluster
 	public static void PrepararGrafico(Individuo ind, int clusters, int dimension1, int dimension2) {
 		
 		int[] ctidadPuntos = new int[clusters];
@@ -101,7 +102,7 @@ public class ClusteringGenetico {
 		    });
 	}
 	
-	
+	//Calcula distancia entre puntos de dos arreglos de n dimensiones
 	public static double calculateDistance(double[] array1, double[] array2)
 	{
         double Sum = 0.0;
@@ -131,7 +132,7 @@ public class ClusteringGenetico {
 		return dataset;
 	}
 	
-	//setear centroides del individuo
+	//setear centroides del individuo al cluster más cercano
 	static void setearcentroides (int dimension, Individuo ind, ArrayList<double[]> dataset, int clusters) {
 		int i;
 		//TreeSet<double[]> tree = new TreeSet <double[]>();
@@ -207,6 +208,7 @@ public class ClusteringGenetico {
 			}*/							
 		}
 		
+		//Reasigna puntos alejados a los centroides más cercanos
 		static Individuo pasoFinal (Individuo mejor, int clusters) {
 			double distancia;
 			double min;
@@ -225,6 +227,7 @@ public class ClusteringGenetico {
 			return mejor;
 		}
 		
+		//calcula promedio
 		static double[] calcMedia() {
 			
 			double[] media = new double[dim];
@@ -241,6 +244,7 @@ public class ClusteringGenetico {
 			return media;
 		}
 		
+		//Distancia intercluster
 		static double SSB (Individuo mejor, int clusters, double[] media) {
 			double distance;
 			double interClust = 0;
@@ -251,8 +255,10 @@ public class ClusteringGenetico {
 						cont++;
 					}
 					//calcula distancia del centroide y la media del dataset al cuadrado
-					distance = Math.pow(calculateDistance(mejor.centroides.get(i), media),2.0);
-					interClust = interClust + (cont*distance);
+					if (cont != 0) {
+						distance = Math.pow(calculateDistance(mejor.centroides.get(i), media),2.0);
+						interClust = interClust + (cont*distance);
+					}
 				}
 			}
 			return interClust;
@@ -269,7 +275,7 @@ public class ClusteringGenetico {
 		
 		switch (menu) {
 		
-			case 1://común
+			case 1://común: clustering genético con un número de cluster
 			{	
 				int clusterInicial = (int)VentanaPrincipal.obtenerSpinnerCantidadClusters().getValue();
 				int cantidadIndividuos = (int)VentanaPrincipal.getSpinnerCantidadIndividuos().getValue();
@@ -339,7 +345,7 @@ public class ClusteringGenetico {
 						}
 						
 						//System.out.println(mejorFitness.fitness);
-						System.out.println(i);			
+						//System.out.println(i);			
 						
 						//Crea la ruleta para la selección
 						population.naturalSelection();
@@ -455,10 +461,9 @@ public class ClusteringGenetico {
 					
 					z = z +1;
 					
-					//Tabla de puntos con sus cluster asociado
+					//Tabla de puntos con sus clusters asociados
 					ArmarTabla(mejor);
 					
-					BanderaCancelar = (boolean)VentanaPrincipal.getBanderaCancelar(); // Condición para cancelar ejecución
 					
 				}
 				
@@ -472,12 +477,13 @@ public class ClusteringGenetico {
 				VentanaPrincipal.getVentanaClustersAsociadosCase1y2().setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 				VentanaPrincipal.getVentanaClustersAsociadosCase1y2().setVisible(false);
 				
+				//Grafica
 				PrepararGrafico(mejores.poblacion[mejorIndex], 
 							mejores.poblacion[mejorIndex].numClusters, (dimensionX-1), (dimensionY-1));
 				}
 				break;
 			
-			case 2://RANGO
+			case 2://RANGO: rango de clusters para determinar la mejor configuración
 			{	
 				int clusterInicial = (int)VentanaPrincipal.obtenerSpinnerCantidadClusters().getValue();
 				int cantidadIndividuos = (int)VentanaPrincipal.getSpinnerCantidadIndividuos().getValue();
@@ -685,7 +691,7 @@ public class ClusteringGenetico {
 				VentanaPrincipal.getTextArea1().append(newline);
 				
 				
-				//Grafica todos los mejores
+				//Imprime datos de los mejores del rango
 				for (int h = 0; h < mejores.poblacion.length; h++) {
 					if (h != mejorIndex ) {						
 						
@@ -740,7 +746,7 @@ public class ClusteringGenetico {
 			}
 			break;
 			
-			case 3:				
+			case 3://Comparación con k-MEANS	
 				
 			{	
 				int clusterInicial = (int)VentanaPrincipal.obtenerSpinnerCantidadClusters().getValue();
@@ -940,7 +946,7 @@ public class ClusteringGenetico {
 							mejores.poblacion[mejorIndex].numClusters, (dimensionX-1), (dimensionY-1));
 				}	
 				
-				
+				//Ejecuta k-means con los mismos parámetros que genético
 				Kmeans.ejecutar();
 				
 				VentanaCentroidesCase3 ventanaCentroidesCase3 = new VentanaCentroidesCase3();

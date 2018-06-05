@@ -19,16 +19,11 @@ public class Quicksort {
          
         int i = lowerIndex;
         int j = higherIndex;
-        // calculate pivot number, I am taking pivot as middle index number
+        // Calcular pivot
          double pivot = array[lowerIndex+(higherIndex-lowerIndex)/2].fitness;
-        // Divide into two arrays
+        // Dividir en dos arreglos
         while (i <= j) {
-            /**
-             * In each iteration, we will identify a number from left side which 
-             * is greater then the pivot value, and also we will identify a number 
-             * from right side which is less then the pivot value. Once the search 
-             * is done, then we exchange both numbers.
-             */
+            
             while (array[i].fitness < pivot) {
                 i++;
             }
@@ -37,12 +32,12 @@ public class Quicksort {
             }
             if (i <= j) {
                 exchangeNumbers(i, j);
-                //move index to next position on both sides
+                //mover el índice a ambos lados
                 i++;
                 j--;
             }
         }
-        // call quickSort() method recursively
+        // llamar a quicksort() recursivamente
         if (lowerIndex < j)
             quickSort(lowerIndex, j);
         if (i < higherIndex)

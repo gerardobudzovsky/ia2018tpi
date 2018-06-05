@@ -39,20 +39,15 @@ public class IndividuoK {
 			
 		}
 	
-		/*public static void main(String[] args) {
-			IndividuoK ind = new IndividuoK(20, 5);
-			
-			System.out.println(Arrays.toString(ind.getPhrase()));
-		}*/
-	
-		// The genetic sequence
+		
+		
 			double constanteFitness = 100000;//Multiplicador para evitar que el fitness sea muy chico
 			ArrayList<double[]> centroides = new ArrayList <double[]>();
-			int numClusters;
-			int[] genes;
-			double fitness;
-			int dimension;
-			ArrayList<double[]> dataset;
+			int numClusters;//número de clusters
+			int[] genes;//Arreglo de puntos con sus correspondientes clusters
+			double fitness;//valor fitness
+			int dimension;//canatidad de dimensiones
+			ArrayList<double[]> dataset;//dataset
 			double MAX;
 		  
 		  // Constructor: recibe "n" (cantidad de puntos que nos pasan) y
@@ -60,7 +55,7 @@ public class IndividuoK {
 			// "d" dimension	
 		IndividuoK(int n, int k, int d, ArrayList<double[]> itemset) {
 			  
-				 dataset = itemset;
+			  dataset = itemset;
 			  dimension = d;
 			  numClusters = k;
 			  
@@ -73,6 +68,7 @@ public class IndividuoK {
 			  double distancia;
 			  int i;
 			  
+			  //Asigna puntos random a los centroides iniciales
 			  for (i = 0; i < numClusters; i++) {
 				  
 				  centroide = dataset.get(r.nextInt(High-Low) + Low);
@@ -185,6 +181,7 @@ public class IndividuoK {
 				return intraClust;
 			}
 		  
+		  //Sum of Square Between
 		  static double SSB (IndividuoK mejor, int clusters, double[] media) {
 				double distance;
 				double interClust = 0;
@@ -195,13 +192,16 @@ public class IndividuoK {
 							cont++;
 						}
 						//calcula distancia del centroide y la media del dataset al cuadrado
-						distance = Math.pow(calculateDistance(mejor.centroides.get(i), media),2.0);
-						interClust = interClust + (cont*distance);
+						if (cont != 0) {
+							distance = Math.pow(calculateDistance(mejor.centroides.get(i), media),2.0);
+							interClust = interClust + (cont*distance);
+						}
 					}
 				}
 				return interClust;
 			}
 		  
+		  //Calcula el promedio del dataset
 		  double[] calcMedia() {
 				
 				double[] media = new double[dimension];

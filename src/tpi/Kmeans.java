@@ -177,26 +177,30 @@ public static void PrepararGrafico (IndividuoK ind, int clusters, int dimension1
 			int band = 1;
 			IndividuoK IndividuoK = new IndividuoK(tamEntrada, clusters, dimension, itemset);
 			
+			//Comienza K-means
 			while ((band == 1) && (h < 1000)) {
 				
 				h++;
 				
-				IndividuoK.fitness(itemset);
+				IndividuoK.fitness(itemset);//Calcula fitness del individuo
 				
-				ArrayList<double[]> centroide1 = IndividuoK.centroides;
+				ArrayList<double[]> centroide1 = IndividuoK.centroides;//Guarda el centroide1
 				
 				setearcentroides (dimension, IndividuoK, itemset, clusters);
-				ArrayList<double[]> centroide2 = IndividuoK.centroides;
+				ArrayList<double[]> centroide2 = IndividuoK.centroides;//Guarda el centroide despues de moverlo por el promedio
 				double distanciaCent = 0;
+				//Calcular cuánto se movió el centroide
 				for (i = 0; i<clusters; i++) {
 					
 					distanciaCent = distanciaCent + calculateDistance(centroide1.get(i), centroide2.get(i));
 				}
 				
+				//Si se movió muy poco pone la bandera a 0 y sale
 				if (distanciaCent < 0.00000001) {band = 0;}
 				
 				double distancia;
 				double min;
+				//Reasigna los puntos a sus centroides más cercanos
 				for (j = 0; j < tamEntrada; j++) {
 			  		  min = MAX1;
 			  		  for (i = 0; i < clusters; i++) {
@@ -209,7 +213,7 @@ public static void PrepararGrafico (IndividuoK ind, int clusters, int dimension1
 			  		  }
 				}	
 				
-				System.out.println(IndividuoK.fitness);	
+				//System.out.println(IndividuoK.fitness);	
 		    
 			}
 						
@@ -217,7 +221,7 @@ public static void PrepararGrafico (IndividuoK ind, int clusters, int dimension1
 			VentanaPrincipal.getTextArea1().append("VALORES DEL ALGORITMO K-MEANS" + newline);
 //			VentanaPrincipal.getTextArea1().append(newline);
 
-
+			//Imprime el fitness y tiene en cuenta el error de Noy a number
 			if (Double.isNaN(IndividuoK.fitness)) {
 				System.out.println("No se puede calcular el fitness, hay clusters vacíos.");
 				VentanaPrincipal.getTextArea1().append("No se puede calcular el fitness, hay clusters vacíos." + newline);
